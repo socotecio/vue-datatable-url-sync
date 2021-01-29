@@ -2,13 +2,15 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h3>test</h3>
-    {{counter}}
+
+    {{form}}
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import useDatatableUrlSync from '../lib-components/useDatatableUrlSync';
+import * as fakeData from "./data";
 
 export default defineComponent({
   name: 'HelloWorld',
@@ -16,10 +18,19 @@ export default defineComponent({
     msg: String,
   },
   setup () {
-    const { counter } = useDatatableUrlSync()
+    const form = {
+      search: ""
+    }
+
+    const fetchDatas = (queryParams: string, queryAsObject: Object) => {
+      console.log(queryParams, queryAsObject)
+      return fakeData
+    }
+
+    useDatatableUrlSync(form, fetchDatas)
 
     return {
-      counter
+      form
     }
   }
 });
