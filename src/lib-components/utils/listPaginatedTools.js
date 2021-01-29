@@ -4,7 +4,7 @@ import {
   extractBooleanValue,
   extractIntegerValue
 } from "./helpers";
-import isEqual from "lodash.isEqual";
+import isEqual from "lodash.isequal";
 
 /*
   This function take a object in parameter that is often a form of filtering field

@@ -30,6 +30,7 @@ export default defineComponent({
     const form = reactive({
       search: ""
     })
+    const options = reactive({})
     const items = ref<any>([])
 
     const fetchDatas = (queryParams: string, queryAsObject: Object) => {
@@ -37,7 +38,7 @@ export default defineComponent({
       items.value = fakeData
     }
 
-    useDatatableUrlSync(form, fetchDatas)
+    useDatatableUrlSync(form, fetchDatas, options)
 
     return {
       form,
