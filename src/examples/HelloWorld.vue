@@ -4,33 +4,44 @@
     <h3>test</h3>
 
     {{form}}
+
+    <input v-model="form.search" />
+
+    <SimpleDatatable :items="items" />
+
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import useDatatableUrlSync from '../lib-components/useDatatableUrlSync';
-import * as fakeData from "./data";
+import fakeData from "./data";
+import SimpleDatatable from './SimpleDatatable.vue';
 
 export default defineComponent({
   name: 'HelloWorld',
+  components: {
+    SimpleDatatable
+  },
   props: {
     msg: String,
   },
   setup () {
-    const form = {
+    const form = reactive({
       search: ""
-    }
+    })
+    const items = ref<any>([])
 
     const fetchDatas = (queryParams: string, queryAsObject: Object) => {
-      console.log(queryParams, queryAsObject)
-      return fakeData
+      console.log("icicci", queryParams, queryAsObject)
+      items.value = fakeData
     }
 
     useDatatableUrlSync(form, fetchDatas)
 
     return {
-      form
+      form,
+      items
     }
   }
 });
