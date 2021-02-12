@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import useDatatableUrlSync from '../lib-components/useDatatableUrlSync';
 import fakeData from "./data";
 import SimpleDatatable from './SimpleDatatable.vue';
@@ -27,10 +27,10 @@ export default defineComponent({
     msg: String,
   },
   setup () {
-    const form = reactive({
+    const form = ref({
       search: ""
     })
-    const options = reactive({})
+    const options = ref({})
     const items = ref<any>([])
 
     const fetchDatas = (queryParams: string, queryAsObject: Object) => {

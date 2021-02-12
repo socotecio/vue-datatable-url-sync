@@ -60,9 +60,8 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
 
 
   watch(form, (newForm) => {
-    console.log("new form: ", newForm)
     debounceSearch(true);
-  })
+  }, { deep: true })
 
 
 
@@ -75,16 +74,16 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   */
   const triggerSearchIfNeeded = (isFilter:Boolean, triggerFunction:Function) => {
     let newLocalQuery: GenericDictionnary = {
-      ...generateQueryFromObject(form, formSchema, true),
-      ...generateQueryFromObject(options, formSchema, true)
+      ...generateQueryFromObject(form.value, formSchema, true),
+      ...generateQueryFromObject(options.value, formSchema, true)
     };
 
     // To keep for debug please
     // console.log(
     //   "triggerSearchIfNeeded",
-    //   JSON.stringify(this.localQuery),
+    //   JSON.stringify(localQuery),
     //   JSON.stringify(newLocalQuery),
-    //   this.$options.name
+    //   options.value?.name
     // );
 
     // Do nothing if nothing change
@@ -98,7 +97,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     // Choose this method because the code is shared here and not duplicated in watcher. Can be refactored if used vue Composition API
     if (newLocalQuery.page && isFilter) {
       delete newLocalQuery.page;
-      options.page = 1;
+      options.value.page = 1;
     }
     disableRouterWatch = true;
 
@@ -123,17 +122,17 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
       loading.value = true;
 
       const queryAsObject:GenericDictionnary = {
-        ...generateQueryFromObject(form, formSchema, false),
-        ...generateQueryFromObject(options, formSchema, false),
+        ...generateQueryFromObject(form.value, formSchema, false),
+        ...generateQueryFromObject(options.value, formSchema, false),
         ...configurations?.extraQueryParams || {}
       };
 
       // Even if value is default for page number if it's not the server default we need to add it
       if (
-        options.page_size &&
-        options.page_size !== configurations?.serveurDefaultPageSize
+        options.value.page_size &&
+        options.value.page_size !== configurations?.serveurDefaultPageSize
       ) {
-        queryAsObject.page_size = options.page_size;
+        queryAsObject.page_size = options.value.page_size;
       }
 
       if (fetchDatas) {
@@ -157,8 +156,8 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
       // typeof undefined is important
       if (
         key.startsWith(configurations?.prefix || "") &&
-        (typeof form[keyWithoutPrefix] !== "undefined" ||
-          typeof options[keyWithoutPrefix] !== "undefined")
+        (typeof form.value[keyWithoutPrefix] !== "undefined" ||
+          typeof options.value[keyWithoutPrefix] !== "undefined")
       ) {
         newLocalQuery[keyWithoutPrefix] = convertParamIfTypeInSchema(
           route.query,
@@ -179,11 +178,11 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   Doc
   */
   const updateFormIfNeeded = (newForm: GenericDictionnary) => {
-    newForm = { ...form, ...newForm };
-    if (isEqual(form, newForm)) {
+    newForm = { ...form.value, ...newForm };
+    if (isEqual(form.value, newForm)) {
       return false;
     }
-    form = newForm;
+    form.value = newForm;
     return true;
   }
 
@@ -191,12 +190,12 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   Doc
   */
   const updateOptionsIfNeeded = (newOptions: GenericDictionnary) => {
-    newOptions = { ...options, ...newOptions };
-    if (isEqual(options, newOptions)) {
+    newOptions = { ...options.value, ...newOptions };
+    if (isEqual(options.value, newOptions)) {
       return false;
     }
 
-    options = newOptions;
+    options.value = newOptions;
     return true;
   }
 
@@ -215,7 +214,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     //   "initializeFromRouter",
     //   JSON.stringify(localQuery),
     //   JSON.stringify(newLocalQuery),
-    //   options.name
+    //   options.value.name
     // );
 
     // route.query can change of instance if we route push in router children. SO we juste assure that we do not fetch data again if the current query object is the same than the new
@@ -239,8 +238,8 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
 
     let { newForm, newOptions } = readFormAndOptionsFromLocalQuery(
       localQuery,
-      form,
-      options,
+      form.value,
+      options.value,
       formSchema,
       removedParams
     );
@@ -248,8 +247,8 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
 
     // If the form is updated because an other component pushed a new value that we was watching
     // And we was not on the first page we need to go back to the first page
-    if (formUpdated && options.page > 1) {
-      options.page = 1;
+    if (formUpdated && options.value.page > 1) {
+      options.value.page = 1;
     }
 
     updateOptionsIfNeeded(newOptions);
