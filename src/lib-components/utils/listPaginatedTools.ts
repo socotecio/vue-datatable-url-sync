@@ -5,6 +5,7 @@ import {
   extractIntegerValue
 } from "./helpers";
 import isEqual from "lodash.isequal";
+import {GenericDictionnary} from "./VDUSTypes"
 
 /*
   This function take a object in parameter that is often a form of filtering field
@@ -12,8 +13,8 @@ import isEqual from "lodash.isequal";
   if localName is true it will no replace the param key with the real used for backend query
   if localName is false the name will be replaced by the correct one sended to backend
   */
-function generateQueryFromObject(object, schema, localName = true) {
-  let queryUrl = {};
+function generateQueryFromObject(object: GenericDictionnary, schema?: GenericDictionnary, localName: Boolean = true): GenericDictionnary {
+  let queryUrl: GenericDictionnary = {};
   for (let [key, value] of Object.entries(object)) {
     // We do not want to send a default value
     if (isValueDefault(value, key, schema)) {
@@ -32,7 +33,7 @@ function generateQueryFromObject(object, schema, localName = true) {
   return queryUrl;
 }
 
-function getDefaultValueForParam(param, schema) {
+function getDefaultValueForParam(param: string, schema?: GenericDictionnary): any {
   if (schema && schema[param]) {
     // if there is a defautl value we change the condition to is non equality
     if (schema[param].default) {
@@ -51,9 +52,9 @@ function getDefaultValueForParam(param, schema) {
   return null;
 }
 
-function isValueDefault(value, param, schema) {
+function isValueDefault(value: any, param: string, schema?: GenericDictionnary): boolean {
   // Default is string
-  let isValueDefault = value === "";
+  let isValueDefault: boolean = value === "";
 
   if (schema && schema[param]) {
     // if there is a defautl value we change the condition to is non equality
@@ -84,14 +85,14 @@ function isValueDefault(value, param, schema) {
   Transform query parameter from vue router to two javascript objects representing the filtering form and the options
   */
 function readFormAndOptionsFromLocalQuery(
-  query,
-  form,
-  options,
-  schema,
-  removedParam = []
-) {
-  let newOptions = {};
-  let newForm = {};
+  query: GenericDictionnary,
+  form: GenericDictionnary,
+  options: GenericDictionnary,
+  schema?: GenericDictionnary,
+  removedParam: Array<string> = []
+): {newOptions: GenericDictionnary, newForm: GenericDictionnary} {
+  let newOptions: GenericDictionnary = {};
+  let newForm: GenericDictionnary = {};
   for (let param in query) {
     if (typeof form[param] !== "undefined") {
       newForm[param] = convertParamIfTypeInSchema(query, param, schema);
@@ -113,7 +114,7 @@ function readFormAndOptionsFromLocalQuery(
   return { newOptions, newForm };
 }
 
-function convertParamIfTypeInSchema(query, param, schema, prefix = "") {
+function convertParamIfTypeInSchema(query: GenericDictionnary, param: string, schema?: GenericDictionnary, prefix: string = ""): any {
   if (!schema || !schema[param] || !schema[param].type) {
     return query[prefix + param];
   }
@@ -133,9 +134,9 @@ function convertParamIfTypeInSchema(query, param, schema, prefix = "") {
   return query[prefix + param];
 }
 
-function getRemovedKeyBetweenTwoObject(originalObject, newObject) {
-  const originalObjectKeys = Object.keys(originalObject);
-  const newObjectKeys = Object.keys(newObject);
+function getRemovedKeyBetweenTwoObject(originalObject: GenericDictionnary, newObject: GenericDictionnary): Array<string> {
+  const originalObjectKeys: Array<string> = Object.keys(originalObject);
+  const newObjectKeys: Array<string> = Object.keys(newObject);
   return originalObjectKeys.filter(
     originalKey => !newObjectKeys.includes(originalKey)
   );

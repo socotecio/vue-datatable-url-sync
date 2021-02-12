@@ -9,23 +9,14 @@ import {
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
-import { ref, onMounted, watch, toRef, reactive } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-type GenericDictionnary = {
-  [key: string]: any
-}
-type VDUSConfiguration = {
-  prefix: string,
-  debounceTime: number,
-  serveurDefaultPageSize: number,
-  extraQueryParams: GenericDictionnary
-}
+import {GenericDictionnary, VDUSConfiguration} from "./utils/VDUSTypes"
 
 /*
 DOC here on params and return value
 */
-export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?:VDUSConfiguration) {
+export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?:VDUSConfiguration) { 
 
   // Set configurations
   configurations = {
@@ -59,7 +50,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   }, configurations?.debounceTime || 0);
 
 
-  watch(form, (newForm) => {
+  watch(form, () => {
     debounceSearch(true);
   }, { deep: true })
 
@@ -229,7 +220,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
       return;
     }
 
-    const removedParams = getRemovedKeyBetweenTwoObject(
+    const removedParams: Array<string> = getRemovedKeyBetweenTwoObject(
       localQuery,
       newLocalQuery
     );
