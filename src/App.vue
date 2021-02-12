@@ -19,4 +19,33 @@ export default defineComponent({
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.container {
+  width: 600px;
+  margin: auto;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+}
+.col {
+  display: flex;
+  padding: 8px;
+}
+.width-40 {
+  width: 40%;
+}
+.mt-8 {
+  margin-top: 32px;
+}
+.mt-4 {
+  margin-top: 16px;
+}
+.border-right {
+  border-right: 1px solid;
+}
+.border-bottom {
+  border-bottom: 1px solid;
+}
 </style>

@@ -91,8 +91,10 @@ function readFormAndOptionsFromLocalQuery(
   schema?: GenericDictionnary,
   removedParam: Array<string> = []
 ): {newOptions: GenericDictionnary, newForm: GenericDictionnary} {
+
   let newOptions: GenericDictionnary = {};
   let newForm: GenericDictionnary = {};
+  
   for (let param in query) {
     if (typeof form[param] !== "undefined") {
       newForm[param] = convertParamIfTypeInSchema(query, param, schema);

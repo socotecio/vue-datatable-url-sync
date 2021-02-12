@@ -1,13 +1,14 @@
 <template>
-  <div class="hello">
+  <div class="container">
     <h1>{{ msg }}</h1>
-    <h3>test</h3>
+    <h3>Test Vue Datatable Url Sync</h3>
 
-    {{form}}
+    <div class="row mt-8">
+      <label for="search">Search: </label>
+      <input id="search" v-model="form.search" />
+    </div>
 
-    <input v-model="form.search" />
-
-    <SimpleDatatable :items="items" />
+    <SimpleDatatable v-model:options="options" :items="items" :headers="['id', 'title']" />
 
   </div>
 </template>
@@ -30,11 +31,15 @@ export default defineComponent({
     const form = ref({
       search: ""
     })
-    const options = ref({})
+    const options = ref({
+        page: 1,
+        page_size: 10,
+        ordering: []
+    })
     const items = ref<any>([])
 
     const fetchDatas = (queryParams: string, queryAsObject: Object) => {
-      console.log("icicci", queryParams, queryAsObject)
+      console.log("to remove after", queryParams, queryAsObject)
       items.value = fakeData
     }
 
@@ -42,6 +47,7 @@ export default defineComponent({
 
     return {
       form,
+      options,
       items
     }
   }

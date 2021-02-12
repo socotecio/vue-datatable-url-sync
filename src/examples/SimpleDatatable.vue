@@ -1,32 +1,91 @@
 <template>
-  <div>
-    Datatable
-  </div>
-  <div>
-    <div v-for="item in items" :key="item[itemKey]">
-      <div v-for="(value, key) in item" :key="key">
-        {{key}}: {{value}}
+  <div class="container">
+    <div class="mt-8">
+      Datatable
+    </div>
+    <div class="mt-8 row"> 
+      <div v-for="header in headers" :key="header" class="col width-40 border-right border-bottom">
+        <p>{{header}}</p>
+        <BaseOrdering :field="header" :value="options.ordering" @input="emitOptions('ordering', $event)" />
+      </div>
+    </div>
+    <div v-for="item in currentItems" :key="item[itemKey]" class="row">
+      <div v-for="(value, key) in item" :key="key" class="col width-40 border-right">
+        <p>{{value}}</p>
+      </div>
+    </div>
+    <div class="mt-4 row">
+      <div class="col width-40">
+        <label>Item per page: </label>
+        <select :modelValue="options.page_size" @change="emitOptions('page_size', parseInt($event.target.value))">
+          <option v-for="itemNumber in [5, 10, 20]" :key="itemNumber" :selected="options.page_size === itemNumber" :value="itemNumber">{{itemNumber}}</option>
+        </select>
+      </div>
+
+      <div class="col width-40">
+        <button v-if="options.page > 1" @click="emitOptions('page', options.page-1)">Prev. page</button>
+        <button v-if="lastVisibleIndex < items.length" @click="emitOptions('page', options.page+1)">Next page</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BaseOrdering from "./BaseOrdering";
+
 export default {
   name: "SimpleDatatable",
+  components: {
+    BaseOrdering
+  },
   props: {
     items: {
+      type: Array,
+      default: () => []
+    },
+    headers: {
       type: Array,
       default: () => []
     },
     itemKey: {
       type: String,
       default: "id"
+    },
+    options: {
+      type: Object,
+      default: () => ({
+        page: 1,
+        page_size: 10,
+        ordering: []
+      })
+    }
+  },
+  computed: {
+    firstVisibleIndex() {
+      return ((this.options.page ?? 1) - 1) * this.options.page_size ?? 10;
+    },
+    lastVisibleIndex() {
+      return (this.options.page ?? 1) * this.options.page_size ?? 10;
+    },
+    currentItems() {
+      console.log(this.firstVisibleIndex, this.lastVisibleIndex)
+      if(this.lastVisibleIndex > this.items.length) {
+        return this.items.slice(this.firstVisibleIndex)
+      }
+      return this.items.slice(this.firstVisibleIndex, this.lastVisibleIndex)
+    }
+  },
+  methods: {
+    emitOptions(optionKey, value) {
+      const newOptions = {
+        ...this.options,
+        [optionKey]: value
+      }
+      this.$emit("update:options", newOptions)
     }
   }
 }
 </script>
 
 <style>
-
 </style>

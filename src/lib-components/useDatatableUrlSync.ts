@@ -9,7 +9,7 @@ import {
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {GenericDictionnary, VDUSConfiguration} from "./utils/VDUSTypes"
 
@@ -18,7 +18,7 @@ DOC here on params and return value
 */
 export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?:VDUSConfiguration) { 
 
-  // Set configurations
+  // ----------------------------- DEFAULTING PARAMS ------------------------------
   configurations = {
     // use a prefix to differentiate possible same name if two component use the same mixin
     prefix: "",
@@ -30,8 +30,14 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     extraQueryParams: {},
     ...configurations || {}
   }
+  formSchema = {
+    page: { type: "integer", default: 1 },
+    page_size: { type: "integer", default: 10 },
+    ordering: { type: "arrayString", default: [] },
+    ...formSchema
+  }
 
-  // data 
+  // ----------------------------- DATA ------------------------------
   const route = useRoute();
   const router = useRouter()
 
@@ -49,9 +55,15 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     localQuery = triggerSearchIfNeeded(isFilter, getDatas);
   }, configurations?.debounceTime || 0);
 
-
+  // ----------------------------- WATCH ------------------------------
   watch(form, () => {
     debounceSearch(true);
+  }, { deep: true })
+
+  watch(options, () => {
+    nextTick(() => {
+      localQuery = triggerSearchIfNeeded(false, getDatas);
+    });
   }, { deep: true })
 
 
