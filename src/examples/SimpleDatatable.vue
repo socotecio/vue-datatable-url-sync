@@ -4,27 +4,63 @@
       Datatable
     </div>
     <div class="mt-8 row"> 
-      <div v-for="header in headers" :key="header" class="col width-40 border-right border-bottom">
-        <p>{{header}}</p>
-        <BaseOrdering :field="header" :value="options.ordering" @input="emitOptions('ordering', $event)" />
+      <div
+        v-for="header in headers"
+        :key="header"
+        class="col width-40 border-right border-bottom"
+      >
+        <p>{{ header }}</p>
+        <BaseOrdering
+          :field="header"
+          :value="options.ordering"
+          @input="emitOptions('ordering', $event)"
+        />
       </div>
     </div>
-    <div v-for="item in currentItems" :key="item[itemKey]" class="row">
-      <div v-for="(value, key) in item" :key="key" class="col width-40 border-right">
-        <p>{{value}}</p>
+    <div
+      v-for="item in currentItems"
+      :key="item[itemKey]"
+      class="row"
+    >
+      <div
+        v-for="(value, key) in item"
+        :key="key"
+        class="col width-40 border-right"
+      >
+        <p>{{ value }}</p>
       </div>
     </div>
     <div class="mt-4 row">
       <div class="col width-40">
         <label>Item per page: </label>
-        <select :modelValue="options.page_size" @change="emitOptions('page_size', parseInt($event.target.value))">
-          <option v-for="itemNumber in [5, 10, 20]" :key="itemNumber" :selected="options.page_size === itemNumber" :value="itemNumber">{{itemNumber}}</option>
+        <select
+          :modelValue="options.page_size"
+          @change="emitOptions('page_size', parseInt($event.target.value))"
+        >
+          <option
+            v-for="itemNumber in [5, 10, 20]"
+            :key="itemNumber"
+            :selected="options.page_size === itemNumber"
+            :value="itemNumber"
+          >
+            {{ itemNumber }}
+          </option>
         </select>
       </div>
 
       <div class="col width-40">
-        <button v-if="options.page > 1" @click="emitOptions('page', options.page-1)">Prev. page</button>
-        <button v-if="lastVisibleIndex < items.length" @click="emitOptions('page', options.page+1)">Next page</button>
+        <button
+          v-if="options.page > 1"
+          @click="emitOptions('page', options.page-1)"
+        >
+          Prev. page
+        </button>
+        <button
+          v-if="lastVisibleIndex < items.length"
+          @click="emitOptions('page', options.page+1)"
+        >
+          Next page
+        </button>
       </div>
     </div>
   </div>
@@ -60,6 +96,7 @@ export default {
       })
     }
   },
+  emits: ['update:options'],
   computed: {
     firstVisibleIndex() {
       return ((this.options.page ?? 1) - 1) * this.options.page_size ?? 10;
@@ -68,7 +105,6 @@ export default {
       return (this.options.page ?? 1) * this.options.page_size ?? 10;
     },
     currentItems() {
-      console.log(this.firstVisibleIndex, this.lastVisibleIndex)
       if(this.lastVisibleIndex > this.items.length) {
         return this.items.slice(this.firstVisibleIndex)
       }

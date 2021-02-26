@@ -1,15 +1,21 @@
 <template>
   <div class="container">
-    <h1>{{ msg }}</h1>
     <h3>Test Vue Datatable Url Sync</h3>
+    <p>The order is alphabetical but this is the example behavior you can implement what you want</p>
 
     <div class="row mt-8">
       <label for="search">Search: </label>
-      <input id="search" v-model="form.search" />
+      <input
+        id="search"
+        v-model="form.search"
+      >
     </div>
 
-    <SimpleDatatable v-model:options="options" :items="items" :headers="['id', 'title']" />
-
+    <SimpleDatatable
+      v-model:options="options"
+      :items="items"
+      :headers="['id', 'title']"
+    />
   </div>
 </template>
 
@@ -18,16 +24,20 @@ import { defineComponent, ref } from 'vue';
 import useDatatableUrlSync from '../lib-components/useDatatableUrlSync';
 import fakeData from "./data";
 import SimpleDatatable from './SimpleDatatable.vue';
+import {GenericDictionnary} from "../lib-components/utils/VDUSTypes";
+
+type FakeDataItem = {
+  id: string,
+  title: string,
+}
 
 export default defineComponent({
   name: 'HelloWorld',
   components: {
     SimpleDatatable
   },
-  props: {
-    msg: String,
-  },
   setup () {
+    // --------------------- DATA ------------------------------------
     const form = ref({
       search: ""
     })
@@ -38,13 +48,49 @@ export default defineComponent({
     })
     const items = ref<any>([])
 
-    const fetchDatas = (queryParams: string, queryAsObject: Object) => {
-      console.log("to remove after", queryParams, queryAsObject)
-      items.value = fakeData
+    // --------------------- METHODS ------------------------------------
+    const filterData = (fakeData: Array<FakeDataItem>, queryAsObject: GenericDictionnary): Array<FakeDataItem> => {
+      if (typeof queryAsObject.search !== "undefined") {
+        fakeData = fakeData.filter(data => {
+          let respondToFilter: boolean = false;
+          Object.values(data).forEach((value: any) => {
+            if (value.includes(queryAsObject.search)) {
+              respondToFilter = true
+            }
+          })
+          return respondToFilter
+        })
+      }
+
+      if (typeof queryAsObject.ordering !== "undefined") {
+        // If multiple ordering you can loop on ordering
+        let orderingKey: string = queryAsObject.ordering[0];
+        const reverse: boolean = orderingKey.startsWith("-")
+        console.log("orderingKey: ", orderingKey, reverse)
+        if (reverse) {
+          orderingKey = orderingKey.replace("-", "")
+        }
+
+        fakeData = fakeData.sort((a: GenericDictionnary, b: GenericDictionnary) => {
+          console.log(a[orderingKey], b[orderingKey], a[orderingKey].localeCompare(b[orderingKey]))
+          if(reverse) {
+            return a[orderingKey].localeCompare(b[orderingKey])
+          }
+          return b[orderingKey].localeCompare(a[orderingKey])
+        })
+      }
+
+      return fakeData
     }
 
+    const fetchDatas = (queryParams: string, queryAsObject: GenericDictionnary) => {
+      items.value = filterData(fakeData, queryAsObject)
+    }
+
+    // --------------------- CREATED ------------------------------------
     useDatatableUrlSync(form, fetchDatas, options)
 
+    // --------------------- INSTANCE ------------------------------------
     return {
       form,
       options,

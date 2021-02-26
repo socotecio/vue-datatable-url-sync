@@ -1,5 +1,7 @@
 <template>
-  <button @click="emitOrdering">{{buttonText}}</button>
+  <button @click="emitOrdering">
+    {{ buttonText }}
+  </button>
 </template>
 
 <script>
@@ -12,9 +14,10 @@ export default {
     },
     field: {
       type: String,
-      reaquired: true
+      required: true
     },
   },
+  emits: ['input'],
   data() {
     return {};
   },

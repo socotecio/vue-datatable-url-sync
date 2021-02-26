@@ -43,11 +43,6 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
 
   let ignoredQueryParams:GenericDictionnary = {};
   let localQuery:GenericDictionnary = {};
-  const defaultFormSchema:GenericDictionnary = {
-    page: { type: "integer", default: 1 },
-    page_size: { type: "integer", default: 10 },
-    ordering: { type: "arrayString", default: [] }
-  }
   const loading = ref<Boolean>(false);
   let disableRouterWatch = false;
 
@@ -66,6 +61,14 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     });
   }, { deep: true })
 
+
+  watch(() => route.query, () => {
+    if (disableRouterWatch) {
+      disableRouterWatch = false;
+      return;
+    }
+    initializeFromRouter(false);
+  }, { deep: true })
 
 
   // ----------------------------- METHODS ------------------------------
