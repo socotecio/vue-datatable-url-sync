@@ -13,6 +13,10 @@
   "jsdelivr": "dist/vue-datatable-url-sync.global.js",
   "module": "dist/vue-datatable-url-sync.esm-bundler.js",
   "types": "dist/vue-datatable-url-sync.d.ts",
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
