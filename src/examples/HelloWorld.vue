@@ -66,13 +66,11 @@ export default defineComponent({
         // If multiple ordering you can loop on ordering
         let orderingKey: string = queryAsObject.ordering[0];
         const reverse: boolean = orderingKey.startsWith("-")
-        console.log("orderingKey: ", orderingKey, reverse)
         if (reverse) {
           orderingKey = orderingKey.replace("-", "")
         }
 
         fakeData = fakeData.sort((a: GenericDictionnary, b: GenericDictionnary) => {
-          console.log(a[orderingKey], b[orderingKey], a[orderingKey].localeCompare(b[orderingKey]))
           if(reverse) {
             return a[orderingKey].localeCompare(b[orderingKey])
           }
