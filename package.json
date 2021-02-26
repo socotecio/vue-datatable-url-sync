@@ -24,6 +24,9 @@
     "vue-demi": "^0.6.2",
     "vue-router": "^4.0.3"
   },
+  "optionalDependencies": {
+    "@vue/composition-api": "^1.0.0-rc.2"
+  },
   "peerDependencies": {
     "@vue/composition-api": "^1.0.0-beta.12",
     "vue": "^2.6.0 || >=3.0.0-rc.0"
