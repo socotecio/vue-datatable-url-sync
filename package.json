@@ -29,8 +29,8 @@
     "@vue/composition-api": "^1.0.0-rc.2"
   },
   "peerDependenciesMeta": {
-    "soy-milk": {
-      "@vue/composition-api": true
+    "@vue/composition-api": {
+      "optional": true
     }
   },
   "devDependencies": {
@@ -57,8 +57,7 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "rollup-plugin-vue": "^6.0.0",
     "typescript": "~3.9.3",
-    "vue": "^3.0.0",
-    "vue2": "npm:vue@2"
+    "vue": "^3.0.0"
   },
   "browserslist": [
     "> 1%",
