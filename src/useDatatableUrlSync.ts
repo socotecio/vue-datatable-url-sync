@@ -9,7 +9,7 @@ import {
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick } from 'vue-demi'
 import { useRoute, useRouter } from 'vue-router'
 import {GenericDictionnary, VDUSConfiguration} from "./utils/VDUSTypes"
 
