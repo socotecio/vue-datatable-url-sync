@@ -7,12 +7,12 @@
     "build": "rollup -c build/rollup.config.js",
     "lint": "vue-cli-service lint"
   },
-  "main": "dist/vue-universal-lib-example.cjs.js",
-  "browser": "dist/vue-universal-lib-example.esm.js",
-  "unpkg": "dist/vue-universal-lib-example-VERSION.global.js",
-  "jsdelivr": "dist/vue-universal-lib-example.global.js",
-  "module": "dist/vue-universal-lib-example.esm-bundler.js",
-  "types": "dist/vue-universal-lib-example.d.ts",
+  "main": "dist/vue-datatable-url-sync.cjs.js",
+  "browser": "dist/vue-datatable-url-sync.esm.js",
+  "unpkg": "dist/vue-datatable-url-sync-VERSION.global.js",
+  "jsdelivr": "dist/vue-datatable-url-sync.global.js",
+  "module": "dist/vue-datatable-url-sync.esm-bundler.js",
+  "types": "dist/vue-datatable-url-sync.d.ts",
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",

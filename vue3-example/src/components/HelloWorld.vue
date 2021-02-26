@@ -21,10 +21,10 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue-demi';
-import useDatatableUrlSync from '../lib-components/useDatatableUrlSync';
+import useDatatableUrlSync from 'vue-datatable-url-sync/useDatatableUrlSync';
 import fakeData from "./data";
 import SimpleDatatable from './SimpleDatatable.vue';
-import {GenericDictionnary} from "../lib-components/utils/VDUSTypes";
+import {GenericDictionnary} from "vue-datatable-url-sync";
 
 type FakeDataItem = {
   id: string,
