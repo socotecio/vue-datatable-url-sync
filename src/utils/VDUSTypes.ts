@@ -8,4 +8,20 @@ type VDUSConfiguration = {
   extraQueryParams: GenericDictionnary
 }
 
-export {GenericDictionnary, VDUSConfiguration}
+type VuetifySortArraysObject = {
+  sortBy: Array<string>,
+  sortDesc: Array<boolean>
+}
+
+type VuetifyOptions = {
+  page: number,
+  itemsPerPage: number,
+  sortBy: Array<string>,
+  sortDesc: Array<boolean>,
+  groupBy: Array<string>,
+  groupDesc: Array<boolean>,
+  multiSort: boolean,
+  mustSort: boolean
+}
+
+export {GenericDictionnary, VDUSConfiguration, VuetifySortArraysObject, VuetifyOptions}

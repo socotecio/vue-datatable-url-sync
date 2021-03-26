@@ -4,14 +4,18 @@ import {
   generateQueryFromObject,
   convertParamIfTypeInSchema,
   getRemovedKeyBetweenTwoObject,
-  //getDefaultValueForParam
+  getDefaultValueForParam
 } from "./utils/listPaginatedTools";
+import {
+  getSortsArrayFromOrdering,
+  getOrderingFromSortArray
+} from "./utils/helpers";
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
-import { ref, watch, nextTick } from 'vue-demi'
+import { ref, watch, nextTick, computed } from 'vue-demi'
 import { useRoute, useRouter } from 'vue-router'
-import {GenericDictionnary, VDUSConfiguration} from "./utils/VDUSTypes"
+import {GenericDictionnary, VDUSConfiguration, VuetifyOptions} from "./utils/VDUSTypes"
 
 /*
 DOC here on params and return value
@@ -49,6 +53,45 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   const debounceSearch = debounce(isFilter => {
     localQuery = triggerSearchIfNeeded(isFilter, getDatas);
   }, configurations?.debounceTime || 0);
+
+  // ----------------------------- COMPUTED ---------------------------
+
+  const vuetifyOptions = computed({
+    get: ():VuetifyOptions => {
+      let vuetifyOptions:VuetifyOptions = {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: [],
+        sortDesc: [],
+        groupBy: [],
+        groupDesc: [],
+        multiSort: false,
+        mustSort: false
+      };
+
+      vuetifyOptions.page = options.page ?? getDefaultValueForParam("page", formSchema);
+      vuetifyOptions.itemsPerPage = options.page_size ?? getDefaultValueForParam("page_size", formSchema);
+
+      let ordering:Array<string> =
+        Array.isArray(options.ordering) &&
+        options.ordering.length > 0
+          ? options.ordering
+          : getDefaultValueForParam("ordering", formSchema);
+
+      let { sortBy, sortDesc } = getSortsArrayFromOrdering(ordering);
+
+      vuetifyOptions.sortBy = sortBy;
+      vuetifyOptions.sortDesc = sortDesc;
+
+      return vuetifyOptions;
+    },
+    set: (newOptions:VuetifyOptions) => {
+      // As we do not define options by default, to avoid reload from other component we doesn't want, we need to set data because they are not reactive
+      options.page = newOptions.page;
+      options.page_size = newOptions.itemsPerPage;
+      options.ordering = getOrderingFromSortArray(newOptions.sortBy, newOptions.sortDesc)
+    }
+  })
 
   // ----------------------------- WATCH ------------------------------
   watch(form, () => {
