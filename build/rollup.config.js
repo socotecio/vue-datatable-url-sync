@@ -7,6 +7,7 @@ import ts from 'rollup-plugin-typescript2';
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import { babel } from '@rollup/plugin-babel';
 import pascalcase from 'pascalcase';
 
 const pkg = require('../package.json');
@@ -136,6 +137,8 @@ function createConfig(format, output, plugins = []) {
         isNodeBuild,
       ),
       ...nodePlugins,
+      // Babel plugin need to be placed after commonjs plugin
+      babel({ babelHelpers: 'runtime' }),
       ...plugins,
     ],
     output,
@@ -171,6 +174,7 @@ function createReplacePlugin(
     __GLOBAL__: isGlobalBuild,
     // is targeting Node (SSR)?
     __NODE_JS__: isNodeBuild,
+    preventAssignment: true
   };
   // allow inline overrides like
   //__RUNTIME_COMPILE__=true yarn build
