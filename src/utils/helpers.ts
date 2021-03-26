@@ -10,7 +10,7 @@ export const elementToArrayOfString = (element: any): Array<string> => {
   return element ? (typeof element === "string" ? [element] : element) : [];
 };
 
-export const extractBooleanValue = (value: any, defaultValue:Boolean = true):Boolean => {
+export const extractBooleanValue = (value: any, defaultValue:boolean = true):boolean => {
   return value ? value.toString() === "true" : defaultValue;
 };
 

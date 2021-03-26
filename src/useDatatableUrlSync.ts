@@ -20,7 +20,7 @@ import {GenericDictionnary, VDUSConfiguration, VuetifyOptions} from "./utils/VDU
 /*
 DOC here on params and return value
 */
-export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?:VDUSConfiguration) { 
+export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?: VDUSConfiguration) { 
 
   // ----------------------------- DEFAULTING PARAMS ------------------------------
   configurations = {
@@ -45,9 +45,9 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   const route = useRoute();
   const router = useRouter()
 
-  let ignoredQueryParams:GenericDictionnary = {};
-  let localQuery:GenericDictionnary = {};
-  const loading = ref<Boolean>(false);
+  let ignoredQueryParams: GenericDictionnary = {};
+  let localQuery: GenericDictionnary = {};
+  const loading = ref<boolean>(false);
   let disableRouterWatch = false;
 
   const debounceSearch = debounce(isFilter => {
@@ -121,7 +121,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   isFilter is true if it's a filter attribute taht changed. This allow us to reset the page number to 1
   This allow to fetch data in back end and apply the filter in the url query 
   */
-  const triggerSearchIfNeeded = (isFilter:Boolean, triggerFunction:Function) => {
+  const triggerSearchIfNeeded = (isFilter:boolean, triggerFunction:Function) => {
     let newLocalQuery: GenericDictionnary = {
       ...generateQueryFromObject(form.value, formSchema, true),
       ...generateQueryFromObject(options.value, formSchema, true)
@@ -251,7 +251,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   /*
   DOC
   */
-  const initializeFromRouter = (created: Boolean) => {
+  const initializeFromRouter = (created: boolean) => {
     // Need to select only elements that are in this.form to avoid multiple instance reload between them
     ignoredQueryParams = {};
 
