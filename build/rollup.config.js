@@ -138,7 +138,11 @@ function createConfig(format, output, plugins = []) {
       ),
       ...nodePlugins,
       // Babel plugin need to be placed after commonjs plugin
-      babel({ babelHelpers: 'runtime' }),
+      babel({ 
+        exclude: 'node_modules/**',
+        extensions: ['.js', '.ts'],
+        babelHelpers: 'runtime' 
+      }),
       ...plugins,
     ],
     output,
