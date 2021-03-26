@@ -52,7 +52,7 @@ setup (props, ctx) {
 ### 3 - Define the function called each time the url query change (in the setup fucntion)
 
 ```js
-const fetchDatas = (queryParams: string, queryAsObject: GenericDictionnary) => {
+const fetchDatas = (queryParams, queryAsObject) => {
     console.log(queryParams, queryAsObject)
 }
 ```
