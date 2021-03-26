@@ -3,7 +3,7 @@
     <v-row class="text-center">
       <v-col cols="12">
         <v-text-field
-          v-model="search"
+          v-model="form.search"
           append-icon="mdi-magnify"
           label="Search"
           single-line
@@ -23,14 +23,15 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import useDatatableUrlSync from 'vue-datatable-url-sync';
+import { GenericDictionnary } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
 import fakeData from "./data";
 import { ref } from '@vue/composition-api'
 
-export default {
+export default Vue.extend({
   name: 'HelloWorld',
-
   data: () => ({
     headers: [
       { text: 'Id', value: 'id' },
@@ -49,6 +50,23 @@ export default {
         ordering: []
     })
     const items = ref<any>([])
+
+    // --------------------- METHODS ------------------------------------
+    const fetchDatas = (queryParams: string, queryAsObject: GenericDictionnary) => {
+      console.log("icicicicic", queryParams, queryAsObject)
+      // items.value = fakeData
+    }
+
+    // --------------------- CREATED ------------------------------------
+    const {vuetifyOptions} = useDatatableUrlSync(form, fetchDatas, options)
+
+    // --------------------- INSTANCE ------------------------------------
+    return {
+      vuetifyOptions,
+      form,
+      options,
+      items
+    }
   }
-}
+});
 </script>

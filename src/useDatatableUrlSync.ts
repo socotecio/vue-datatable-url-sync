@@ -314,6 +314,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   initializeFromRouter(true)
 
   return {
+    vuetifyOptions,
     loading
   }
 }
