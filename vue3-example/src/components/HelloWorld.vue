@@ -21,14 +21,15 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import useDatatableUrlSync from 'vue-datatable-url-sync/useDatatableUrlSync';
-import fakeData from "./data";
+import useDatatableUrlSync from 'vue-datatable-url-sync';
+import fakeData from "./data.js";
 import SimpleDatatable from './SimpleDatatable.vue';
-import {GenericDictionnary} from "vue-datatable-url-sync";
+import { GenericDictionnary } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
+import { useRoute, useRouter } from "vue-router";
 
 type FakeDataItem = {
-  id: string,
-  title: string,
+  id: string;
+  title: string;
 }
 
 export default defineComponent({
@@ -52,7 +53,7 @@ export default defineComponent({
     const filterData = (fakeData: Array<FakeDataItem>, queryAsObject: GenericDictionnary): Array<FakeDataItem> => {
       if (typeof queryAsObject.search !== "undefined") {
         fakeData = fakeData.filter(data => {
-          let respondToFilter: boolean = false;
+          let respondToFilter = false;
           Object.values(data).forEach((value: any) => {
             if (value.includes(queryAsObject.search)) {
               respondToFilter = true
@@ -86,7 +87,7 @@ export default defineComponent({
     }
 
     // --------------------- CREATED ------------------------------------
-    useDatatableUrlSync(form, fetchDatas, options)
+    useDatatableUrlSync(useRoute(), useRouter(), form, fetchDatas, options)
 
     // --------------------- INSTANCE ------------------------------------
     return {
