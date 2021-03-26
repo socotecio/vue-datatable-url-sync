@@ -37,7 +37,7 @@ export default function useDatatableUrlSync(route: any, router: any, form: Gener
     page: { type: "integer", default: 1 },
     page_size: { type: "integer", default: 10 },
     ordering: { type: "arrayString", default: [] },
-    ...formSchema
+    ...formSchema || {}
   }
 
   // ----------------------------- DATA ------------------------------
