@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue-demi';
+import { defineComponent, ref } from 'vue';
 import useDatatableUrlSync from 'vue-datatable-url-sync/useDatatableUrlSync';
 import fakeData from "./data";
 import SimpleDatatable from './SimpleDatatable.vue';
