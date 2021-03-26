@@ -16,7 +16,7 @@
           :items="fakeData"
           :options.sync="vuetifyOptions"
           class="elevation-1"
-          :search="search"
+          :search="form.search"
         ></v-data-table>
       </v-col>
     </v-row>
@@ -26,6 +26,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import useDatatableUrlSync from 'vue-datatable-url-sync';
+//import useDatatableUrlSync from './useDatatableUrlSync';
 import { GenericDictionnary } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
 import fakeData from "./data";
 import { ref } from '@vue/composition-api'
@@ -39,7 +40,7 @@ export default Vue.extend({
     ],
     fakeData
   }),
-  setup () {
+  setup (_, ctx) {
     // --------------------- DATA ------------------------------------
     const form = ref({
       search: ""
@@ -53,12 +54,13 @@ export default Vue.extend({
 
     // --------------------- METHODS ------------------------------------
     const fetchDatas = (queryParams: string, queryAsObject: GenericDictionnary) => {
-      console.log("icicicicic", queryParams, queryAsObject)
-      // items.value = fakeData
+      // Vuetify do all the front filtering for us so fetchDatas can be a dummy function. 
+      // If you are doing a backend filtering you have to adapt this function to fetch the data correctly filtered and paginated by your backend
+      console.log(queryParams, queryAsObject)
     }
 
     // --------------------- CREATED ------------------------------------
-    const {vuetifyOptions} = useDatatableUrlSync(form, fetchDatas, options)
+    const {vuetifyOptions} = useDatatableUrlSync(ctx.root.$route, ctx.root.$router, form, fetchDatas, options)
 
     // --------------------- INSTANCE ------------------------------------
     return {

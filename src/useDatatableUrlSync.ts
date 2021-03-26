@@ -14,13 +14,12 @@ import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
 import { ref, watch, nextTick, computed } from 'vue-demi'
-import { useRoute, useRouter } from 'vue-router'
 import {GenericDictionnary, VDUSConfiguration, VuetifyOptions} from "./utils/VDUSTypes"
 
 /*
 DOC here on params and return value
 */
-export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?: VDUSConfiguration) { 
+export default function useDatatableUrlSync(route: any, router: any, form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?: VDUSConfiguration) { 
 
   // ----------------------------- DEFAULTING PARAMS ------------------------------
   configurations = {
@@ -42,9 +41,6 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   }
 
   // ----------------------------- DATA ------------------------------
-  const route = useRoute();
-  const router = useRouter()
-
   let ignoredQueryParams: GenericDictionnary = {};
   let localQuery: GenericDictionnary = {};
   const loading = ref<boolean>(false);
@@ -57,8 +53,8 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   // ----------------------------- COMPUTED ---------------------------
 
   const vuetifyOptions = computed({
-    get: ():VuetifyOptions => {
-      let vuetifyOptions:VuetifyOptions = {
+    get: (): VuetifyOptions => {
+      const vuetifyOptions: VuetifyOptions = {
         page: 1,
         itemsPerPage: 10,
         sortBy: [],
@@ -69,27 +65,27 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
         mustSort: false
       };
 
-      vuetifyOptions.page = options.page ?? getDefaultValueForParam("page", formSchema);
-      vuetifyOptions.itemsPerPage = options.page_size ?? getDefaultValueForParam("page_size", formSchema);
+      vuetifyOptions.page = options.value.page ?? getDefaultValueForParam("page", formSchema);
+      vuetifyOptions.itemsPerPage = options.value.page_size ?? getDefaultValueForParam("page_size", formSchema);
 
-      let ordering:Array<string> =
-        Array.isArray(options.ordering) &&
-        options.ordering.length > 0
-          ? options.ordering
+      const ordering: Array<string> =
+        Array.isArray(options.value.ordering) &&
+        options.value.ordering.length > 0
+          ? options.value.ordering
           : getDefaultValueForParam("ordering", formSchema);
 
-      let { sortBy, sortDesc } = getSortsArrayFromOrdering(ordering);
+      const { sortBy, sortDesc } = getSortsArrayFromOrdering(ordering);
 
       vuetifyOptions.sortBy = sortBy;
       vuetifyOptions.sortDesc = sortDesc;
 
       return vuetifyOptions;
     },
-    set: (newOptions:VuetifyOptions) => {
+    set: (newOptions: VuetifyOptions) => {
       // As we do not define options by default, to avoid reload from other component we doesn't want, we need to set data because they are not reactive
-      options.page = newOptions.page;
-      options.page_size = newOptions.itemsPerPage;
-      options.ordering = getOrderingFromSortArray(newOptions.sortBy, newOptions.sortDesc)
+      options.value.page = newOptions.page;
+      options.value.page_size = newOptions.itemsPerPage;
+      options.value.ordering = getOrderingFromSortArray(newOptions.sortBy, newOptions.sortDesc)
     }
   })
 
@@ -121,8 +117,8 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   isFilter is true if it's a filter attribute taht changed. This allow us to reset the page number to 1
   This allow to fetch data in back end and apply the filter in the url query 
   */
-  const triggerSearchIfNeeded = (isFilter:boolean, triggerFunction:Function) => {
-    let newLocalQuery: GenericDictionnary = {
+  const triggerSearchIfNeeded = (isFilter: boolean, triggerFunction: Function) => {
+    const newLocalQuery: GenericDictionnary = {
       ...generateQueryFromObject(form.value, formSchema, true),
       ...generateQueryFromObject(options.value, formSchema, true)
     };
@@ -152,7 +148,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
 
     // As we have a local copy of the query without the prefix to help readability and developper experience
     // We need to set back the prefix before pushing
-    const newLocalQueryWithPrefix:GenericDictionnary = {};
+    const newLocalQueryWithPrefix: GenericDictionnary = {};
     Object.entries(newLocalQuery).forEach(([key, value]) => {
       newLocalQueryWithPrefix[configurations?.prefix + key] = value;
     });
@@ -170,7 +166,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     try {
       loading.value = true;
 
-      const queryAsObject:GenericDictionnary = {
+      const queryAsObject: GenericDictionnary = {
         ...generateQueryFromObject(form.value, formSchema, false),
         ...generateQueryFromObject(options.value, formSchema, false),
         ...configurations?.extraQueryParams || {}
@@ -197,10 +193,10 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
   Doc
   */
   const getLocalCopyOfQueryUrl = () => {
-    let newLocalQuery: GenericDictionnary = {};
+    const newLocalQuery: GenericDictionnary = {};
     Object.keys(route.query).forEach(key => {
       // We remove the prefix for the local copy to be agnostic of it in the code
-      let keyWithoutPrefix = key.replace(configurations?.prefix || "", "");
+      const keyWithoutPrefix = key.replace(configurations?.prefix || "", "");
 
       // typeof undefined is important
       if (
@@ -256,7 +252,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
     ignoredQueryParams = {};
 
     // localQuery is the memory of the query in url to know when reload data.
-    let newLocalQuery = getLocalCopyOfQueryUrl();
+    const newLocalQuery = getLocalCopyOfQueryUrl();
 
     //To keep for debug please
     // console.log(
@@ -285,7 +281,7 @@ export default function useDatatableUrlSync(form: GenericDictionnary, fetchDatas
 
     localQuery = newLocalQuery;
 
-    let { newForm, newOptions } = readFormAndOptionsFromLocalQuery(
+    const { newForm, newOptions } = readFormAndOptionsFromLocalQuery(
       localQuery,
       form.value,
       options.value,
