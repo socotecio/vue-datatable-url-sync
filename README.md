@@ -85,6 +85,7 @@ function useDatatableUrlSync(route: any, router: any, form: GenericDictionnary, 
 ```
 
 | Params | Description |
+| --------- | ----------------------------------------------------------------- |
 | route | The route element from vue router. As it differe from Vue2 and Vue3 we can't import it automatically and need to have the instance in parameter |
 | router | The route instance from vue router. As it differe from Vue2 and Vue3 we can't import it automatically and need to have the instance in parameter |
 | form | A simple object used to filter the form. This object is synchronized with the url. When it change it reset the page attribute of the options variable |
@@ -98,5 +99,6 @@ function useDatatableUrlSync(route: any, router: any, form: GenericDictionnary, 
 # useDatatableUrlSync returned value
 
 | Key name | Description |
+| --------- | ----------------------------------------------------------------- |
 | loading | Boolean value to be able to wait in the template that the data is correctly setted from the url and the data retrieve or filtered in fetchDatas especially if your fetchDatas is asynchronous |
 | vuetifyOptions | The datatable options on the vuetify format to be able to use it directly in the template without the need to transform it |
