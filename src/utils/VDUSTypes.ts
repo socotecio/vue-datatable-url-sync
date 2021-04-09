@@ -1,11 +1,28 @@
 type GenericDictionnary = {
   [key: string]: any;
 }
+
+type VDUSParamSchema = {
+  name?: string;
+  default?: any;
+  type?: "string" | "boolean" | "integer" | "arrayInt" | "arrayString";
+}
+
+type VDUSFormSchema = {
+  [key: string]: VDUSParamSchema;
+}
+
+type VDUSDatatableOptions = {
+  page?: number;
+  page_size?: number;
+  ordering?: Array<string>;
+}
+
 type VDUSConfiguration = {
-  prefix: string;
-  debounceTime: number;
-  serveurDefaultPageSize: number;
-  extraQueryParams: GenericDictionnary;
+  prefix?: string;
+  debounceTime?: number;
+  serveurDefaultPageSize?: number;
+  extraQueryParams?: GenericDictionnary;
 }
 
 type VuetifySortArraysObject = {
@@ -24,4 +41,4 @@ type VuetifyOptions = {
   mustSort: boolean;
 }
 
-export {GenericDictionnary, VDUSConfiguration, VuetifySortArraysObject, VuetifyOptions}
+export {GenericDictionnary, VDUSConfiguration, VuetifySortArraysObject, VuetifyOptions, VDUSParamSchema, VDUSFormSchema, VDUSDatatableOptions}

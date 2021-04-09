@@ -13,13 +13,13 @@ import {
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
-import { ref, watch, nextTick, computed } from 'vue-demi'
-import {GenericDictionnary, VDUSConfiguration, VuetifyOptions} from "./utils/VDUSTypes"
+import { ref, watch, nextTick, computed, Ref } from 'vue-demi'
+import {GenericDictionnary, VDUSConfiguration, VuetifyOptions, VDUSFormSchema, VDUSDatatableOptions} from "./utils/VDUSTypes"
 
 /*
 DOC here on params and return value
 */
-export default function useDatatableUrlSync(route: any, router: any, form: GenericDictionnary, fetchDatas: Function, options: GenericDictionnary, formSchema?: GenericDictionnary, initializeForm?: Function, configurations?: VDUSConfiguration) { 
+export default function useDatatableUrlSync(route: any, router: any, form: Ref<GenericDictionnary>, fetchDatas: Function, options: Ref<VDUSDatatableOptions>, formSchema?: VDUSFormSchema, initializeForm?: Function, configurations?: VDUSConfiguration) { 
 
   // ----------------------------- DEFAULTING PARAMS ------------------------------
   configurations = {
@@ -32,6 +32,12 @@ export default function useDatatableUrlSync(route: any, router: any, form: Gener
     // This mean to be overrided to add query params that are fixed and should not appear in url
     extraQueryParams: {},
     ...configurations || {}
+  }
+  options.value = {
+    page: 1,
+    page_size: configurations.serveurDefaultPageSize,
+    ordering: [],
+    ...options.value
   }
   formSchema = {
     page: { type: "integer", default: 1 },
@@ -202,7 +208,7 @@ export default function useDatatableUrlSync(route: any, router: any, form: Gener
       if (
         key.startsWith(configurations?.prefix || "") &&
         (typeof form.value[keyWithoutPrefix] !== "undefined" ||
-          typeof options.value[keyWithoutPrefix] !== "undefined")
+          typeof (options.value as GenericDictionnary)[keyWithoutPrefix] !== "undefined")
       ) {
         newLocalQuery[keyWithoutPrefix] = convertParamIfTypeInSchema(
           route.query,
@@ -234,7 +240,7 @@ export default function useDatatableUrlSync(route: any, router: any, form: Gener
   /*
   Doc
   */
-  const updateOptionsIfNeeded = (newOptions: GenericDictionnary) => {
+  const updateOptionsIfNeeded = (newOptions: VDUSDatatableOptions) => {
     newOptions = { ...options.value, ...newOptions };
     if (isEqual(options.value, newOptions)) {
       return false;
@@ -292,7 +298,8 @@ export default function useDatatableUrlSync(route: any, router: any, form: Gener
 
     // If the form is updated because an other component pushed a new value that we was watching
     // And we was not on the first page we need to go back to the first page
-    if (formUpdated && options.value.page > 1) {
+    const currentPageNumber: number = options.value.page || 1;
+    if (formUpdated && currentPageNumber > 1) {
       options.value.page = 1;
     }
 

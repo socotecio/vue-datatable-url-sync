@@ -5,9 +5,9 @@ import {
   extractIntegerValue
 } from "./helpers";
 import isEqual from "lodash.isequal";
-import {GenericDictionnary} from "./VDUSTypes"
+import {GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema} from "./VDUSTypes"
 
-function getDefaultValueForParam(param: string, schema?: GenericDictionnary): any {
+const getDefaultValueForParam = (param: string, schema?: VDUSFormSchema): any => {
   if (schema && schema[param]) {
     // if there is a defautl value we change the condition to is non equality
     if (schema[param].default) {
@@ -18,7 +18,7 @@ function getDefaultValueForParam(param: string, schema?: GenericDictionnary): an
     else if (schema[param].type === "boolean") {
       // Default for boolean is false
       return false;
-    } else if (["arrayInt", "arrayString"].includes(schema[param].type)) {
+    } else if (["arrayInt", "arrayString"].includes(schema[param].type as string)) {
       // Default for array is empty array or first element null or empty
       return [];
     }
@@ -26,7 +26,7 @@ function getDefaultValueForParam(param: string, schema?: GenericDictionnary): an
   return null;
 }
 
-function isValueDefault(value: any, param: string, schema?: GenericDictionnary): boolean {
+const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boolean => {
   // Default is string
   let isValueDefault: boolean = value === "";
 
@@ -44,7 +44,7 @@ function isValueDefault(value: any, param: string, schema?: GenericDictionnary):
     else if (schema[param].type === "boolean") {
       // Default for boolean is false
       isValueDefault = value === false;
-    } else if (["arrayInt", "arrayString"].includes(schema[param].type)) {
+    } else if (["arrayInt", "arrayString"].includes(schema[param].type as string)) {
       // Default for array is empty array or first element null or empty
       isValueDefault =
         value.length === 0 || value[0] === null || value[0] === "";
@@ -61,7 +61,7 @@ function isValueDefault(value: any, param: string, schema?: GenericDictionnary):
   if localName is true it will no replace the param key with the real used for backend query
   if localName is false the name will be replaced by the correct one sended to backend
   */
-function generateQueryFromObject(object: GenericDictionnary, schema?: GenericDictionnary, localName = true): GenericDictionnary {
+const generateQueryFromObject = (object: GenericDictionnary, schema?: VDUSFormSchema, localName = true): GenericDictionnary => {
   const queryUrl: GenericDictionnary = {};
   for (const [key, value] of Object.entries(object)) {
     // We do not want to send a default value
@@ -73,7 +73,7 @@ function generateQueryFromObject(object: GenericDictionnary, schema?: GenericDic
     let queryKey = key;
     // But this can be overrided if name attribute is defined in the param schema
     if (!localName && schema && schema[key] && schema[key].name) {
-      queryKey = schema[key].name;
+      queryKey = (schema[key].name as string); // typescript error because .name can be undefined but if check it before
     }
 
     queryUrl[queryKey] = value;
@@ -81,7 +81,7 @@ function generateQueryFromObject(object: GenericDictionnary, schema?: GenericDic
   return queryUrl;
 }
 
-function convertParamIfTypeInSchema(query: GenericDictionnary, param: string, schema?: GenericDictionnary, prefix = ""): any {
+const convertParamIfTypeInSchema = (query: GenericDictionnary, param: string, schema?: VDUSFormSchema, prefix = ""): any => {
   if (!schema || !schema[param] || !schema[param].type) {
     return query[prefix + param];
   }
@@ -104,22 +104,22 @@ function convertParamIfTypeInSchema(query: GenericDictionnary, param: string, sc
 /*
   Transform query parameter from vue router to two javascript objects representing the filtering form and the options
   */
-function readFormAndOptionsFromLocalQuery(
+const readFormAndOptionsFromLocalQuery = (
   query: GenericDictionnary,
   form: GenericDictionnary,
-  options: GenericDictionnary,
-  schema?: GenericDictionnary,
+  options: VDUSDatatableOptions,
+  schema?: VDUSFormSchema,
   removedParam: Array<string> = []
-): {newOptions: GenericDictionnary; newForm: GenericDictionnary} {
+): {newOptions: VDUSDatatableOptions; newForm: GenericDictionnary} => {
 
-  const newOptions: GenericDictionnary = {};
+  const newOptions: VDUSDatatableOptions = {};
   const newForm: GenericDictionnary = {};
   
   for (const param in query) {
     if (typeof form[param] !== "undefined") {
       newForm[param] = convertParamIfTypeInSchema(query, param, schema);
-    } else if (typeof options[param] !== "undefined") {
-      newOptions[param] = convertParamIfTypeInSchema(query, param, schema);
+    } else if (typeof (options as GenericDictionnary)[param] !== "undefined") {
+      (newOptions as GenericDictionnary)[param] = convertParamIfTypeInSchema(query, param, schema);
     }
   }
   // This allow to reset to default deleted param by other component
@@ -129,14 +129,14 @@ function readFormAndOptionsFromLocalQuery(
     }
   });
   removedParam.forEach(param => {
-    if (typeof options[param] !== "undefined") {
-      newOptions[param] = getDefaultValueForParam(param, schema);
+    if (typeof (options as GenericDictionnary)[param] !== "undefined") {
+      (newOptions as GenericDictionnary)[param] = getDefaultValueForParam(param, schema);
     }
   });
   return { newOptions, newForm };
 }
 
-function getRemovedKeyBetweenTwoObject(originalObject: GenericDictionnary, newObject: GenericDictionnary): Array<string> {
+const getRemovedKeyBetweenTwoObject = (originalObject: GenericDictionnary, newObject: GenericDictionnary): Array<string> => {
   const originalObjectKeys: Array<string> = Object.keys(originalObject);
   const newObjectKeys: Array<string> = Object.keys(newObject);
   return originalObjectKeys.filter(
