@@ -14,7 +14,8 @@ By separating the filters and the datable options vue-datatable-url-sync automat
 
 Example of usage with a vuetify datatable (It can work with any datatable):
 
-// coming soon
+https://user-images.githubusercontent.com/11883225/114200483-8b1aee80-9955-11eb-9bd5-e16762476baf.mp4
+
 
 # Installation:
 
