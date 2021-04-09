@@ -90,10 +90,10 @@ function useDatatableUrlSync(route: any, router: any, form: GenericDictionnary, 
 | router | The route instance from vue router. As it differe from Vue2 and Vue3 we can't import it automatically and need to have the instance in parameter |
 | form | A simple object used to filter the form. This object is synchronized with the url. When it change it reset the page attribute of the options variable |
 | fetchDatas | Callback function called when options or form changed or after a reload with the correct parameter to send to the backend for backend pagination or custom actions. This function take 2 parameter: queryParams, queryAsObject that are the data transformed by VDUS to match your backend criteria in string or object format.  |
-| options | The options used for the datatable. It follow a strict pattern. See [VDUSDatatableOptions](#TODO) type for more informations. If your server use other query identifier use formSchema to change their name before fetchDatas been called |
-| formSchema | Optional. The object that allow you to customize the defaut value, the type and the names send to the backend. See [VDUSFormSchema](#TODO) type for the structure and [the documentation section](#TODO) to understand how to use it |
+| options | The options used for the datatable. It follow a strict pattern. See [VDUSDatatableOptions](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L15) type for more informations. If your server use other query identifier use formSchema to change their name before fetchDatas been called |
+| formSchema | Optional. The object that allow you to customize the defaut value, the type and the names send to the backend. See [VDUSFormSchema](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L11) type for the structure and [the documentation section](#formschema) to understand how to use it |
 | initializeForm | Optional. A callback function called at the component creation to allow developer to adapt behavior depending of the query params in the url if needed. Usefull if to value are non-compatible because user change it manually. |
-| configurations | Optional. Object that allow to personnalise the behavior of VDUS in specific case. See [VDUSConfiguration](#TODO) type and [the documentation section](#TODO) to understand how to use it |
+| configurations | Optional. Object that allow to personnalise the behavior of VDUS in specific case. See [VDUSConfiguration](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L21) type and [the documentation section](#configurations) to understand how to use it |
 
 
 # useDatatableUrlSync returned values
@@ -104,14 +104,25 @@ function useDatatableUrlSync(route: any, router: any, form: GenericDictionnary, 
 | vuetifyOptions | The datatable options on the vuetify format to be able to use it directly in the template without the need to transform it |
 
 
+# Configurations
+
+Configurations object allow you to personnalize the behavior of vue-datatable-url-sync. All the configurations are optionals
+
+| Key name | Default | Description |
+| --------- | ------------ | ----------------------------------------------------------------- |
+| prefix | "" | Prefix all the params by a string only in the url to allow you have multiple instance of VDUS in the same html page |
+| debounceTime | 0 | Allow you to specify a debounce time before sending request to your server. This is usefull when you have only text field but can bring lag feeling when using checkbox or select. You can also use debounce directly in your component to personalize this behavior |
+| serveurDefaultPageSize | 10 | The default value for you backend pagination to be sure to send it if the default value in front is different that the one in your back |
+| extraQueryParams | {} | Put variable in the url and send them to your back even if not in your form |
+
 # FormSchema 
 
 The parameter formSchema allow you to adapt the default behavior of vue-datatable-url-sync for each parameter (for the form AND for the options).
 With it you can specify the type of the params, the default value and the query param name to send to the server.
 
-[See the type to understand better](#TODO)
+[See the type to understand better](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L11)
 
-Here is the description of the type for the configuration of each params ((ParamSchema)[#TODO]) 
+Here is the description of the type for the configuration of each params ([ParamSchema](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L5)) 
 
 | Key name | Description |
 | --------- | ----------------------------------------------------------------- |
@@ -124,8 +135,8 @@ Here is the description of the type for the configuration of each params ((Param
 
 | Type name | Description |
 | ----------- | ------------------------------------------------------------------- |
-| [GenericDictionnary](#TODO) | Generic object that accept any key and any value |
-| [VDUSParamSchema](#TODO) | Object describing how to handle query param when reading them from url or before sending them to the backend server |
-| [VDUSFormSchema](#TODO) | Object describing how to handle the form and options object passed as parameter of useDatatableUrlSync |
-| [VDUSDatatableOptions](#TODO) | Object describing the params accepted in the datatable options |
-| [VDUSConfiguration](#TODO) | Configuration object for vue datatable url sync |
+| [GenericDictionnary](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L1) | Generic object that accept any key and any value |
+| [VDUSParamSchema](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L5) | Object describing how to handle query param when reading them from url or before sending them to the backend server |
+| [VDUSFormSchema](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L11) | Object describing how to handle the form and options object passed as parameter of useDatatableUrlSync |
+| [VDUSDatatableOptions](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L15) | Object describing the params accepted in the datatable options |
+| [VDUSConfiguration](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L21) | Configuration object for vue datatable url sync |
