@@ -8,7 +8,7 @@ If yes was it frustrating ?
 If yes then this lib is here to help your user never feel that again. Even if you reload the page or share the link with others user.
 
 
-Now there is already some other lib even in pure Vanilla to sync the query parameters with a javascript object. But you have to rewrite all the logic avec the datatble options (page, pageSize, ordering) and even compare the difference between two state.
+Now there is already some other lib even in pure Vanilla to sync the query parameters with a javascript object. But you have to rewrite all the logic with the datatable options (page, pageSize, ordering) and even compare the difference between two state.
 
 By separating the filters and the datable options vue-datatable-url-sync automatise all the desired behavior for working with datatable.
 
