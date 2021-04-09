@@ -26,8 +26,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import useDatatableUrlSync from 'vue-datatable-url-sync';
-//import useDatatableUrlSync from './useDatatableUrlSync';
-import { GenericDictionnary } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
+import { GenericDictionnary, VDUSDatatableOptions } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
 import fakeData from "./data";
 import { ref } from '@vue/composition-api'
 
@@ -42,10 +41,10 @@ export default Vue.extend({
   }),
   setup (_, ctx) {
     // --------------------- DATA ------------------------------------
-    const form = ref({
+    const form = ref<GenericDictionnary>({
       search: ""
     })
-    const options = ref({
+    const options = ref<VDUSDatatableOptions>({
         page: 1,
         page_size: 10,
         ordering: []

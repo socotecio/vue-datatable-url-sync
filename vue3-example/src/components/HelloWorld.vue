@@ -22,9 +22,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import useDatatableUrlSync from 'vue-datatable-url-sync';
+import { GenericDictionnary, VDUSDatatableOptions } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
+// import useDatatableUrlSync from '../../../src/useDatatableUrlSync';
+// import { GenericDictionnary, VDUSDatatableOptions } from '../../../src/utils/VDUSTypes';
 import fakeData from "./data.js";
 import SimpleDatatable from './SimpleDatatable.vue';
-import { GenericDictionnary } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
 import { useRoute, useRouter } from "vue-router";
 
 type FakeDataItem = {
@@ -39,10 +41,10 @@ export default defineComponent({
   },
   setup () {
     // --------------------- DATA ------------------------------------
-    const form = ref({
+    const form = ref<GenericDictionnary>({
       search: ""
     })
-    const options = ref({
+    const options = ref<VDUSDatatableOptions>({
         page: 1,
         page_size: 10,
         ordering: []
