@@ -2,15 +2,15 @@ import {VuetifySortArraysObject} from "./VDUSTypes";
 
 export const elementToArrayOfInt = (element: any): Array<number> => {
   return ["number", "string"].includes(typeof element)
-    ? [parseInt(element)]
-    : element.map((item: any) => parseInt(item));
+    ? [extractIntegerValue(element)]
+    : element.map((item: any) => extractIntegerValue(item));
 };
 
 export const elementToArrayOfString = (element: any): Array<string> => {
   return element ? (typeof element === "string" ? [element] : element) : [];
 };
 
-export const extractBooleanValue = (value: any, defaultValue = true): boolean => {
+export const extractBooleanValue = (value: any, defaultValue:boolean|null = true): boolean|null => {
   return value ? value.toString() === "true" : defaultValue;
 };
 
@@ -19,7 +19,7 @@ export const extractIntegerValue = (value: any, defaultValue = 0): number => {
   return isNaN(parsed) ? defaultValue : parsed;
 };
 
-export const getSortsArrayFromOrdering = (ordering: Array<string>): VuetifySortArraysObject => {
+export const getSortsArrayFromOrdering = (ordering: Array<string>|null): VuetifySortArraysObject => {
   if (!ordering) {
     return { sortBy: [], sortDesc: [] };
   }
