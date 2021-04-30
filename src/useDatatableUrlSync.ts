@@ -31,6 +31,8 @@ export default function useDatatableUrlSync(route: any, router: any, form: Ref<G
     serveurDefaultPageSize: 10,
     // This mean to be overrided to add query params that are fixed and should not appear in url
     extraQueryParams: {},
+    // this is used when you have special behavior to update your form like emit event instead of direct assignation
+    updateFormFunction: null,
     ...configurations || {}
   }
   options.value = {
@@ -233,7 +235,12 @@ export default function useDatatableUrlSync(route: any, router: any, form: Ref<G
     if (isEqual(form.value, newForm)) {
       return false;
     }
-    form.value = newForm;
+    // Let user update his form as he want to.
+    if (configurations?.updateFormFunction) {
+      configurations?.updateFormFunction(newForm)
+    } else {
+      form.value = newForm;
+    }
     return true;
   }
 

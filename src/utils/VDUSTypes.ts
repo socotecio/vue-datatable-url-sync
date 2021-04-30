@@ -23,6 +23,7 @@ type VDUSConfiguration = {
   debounceTime?: number;
   serveurDefaultPageSize?: number;
   extraQueryParams?: GenericDictionnary;
+  updateFormFunction?: Function | null;
 }
 
 type VuetifySortArraysObject = {

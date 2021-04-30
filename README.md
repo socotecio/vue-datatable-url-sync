@@ -115,6 +115,7 @@ Configurations object allow you to personnalize the behavior of vue-datatable-ur
 | debounceTime | 0 | Allow you to specify a debounce time before sending request to your server. This is usefull when you have only text field but can bring lag feeling when using checkbox or select. You can also use debounce directly in your component to personalize this behavior |
 | serveurDefaultPageSize | 10 | The default value for you backend pagination to be sure to send it if the default value in front is different that the one in your back |
 | extraQueryParams | {} | Put variable in the url and send them to your back even if not in your form |
+| updateFormFunction | null | Use a custom function to update form instead of direct assignation. Usefull when form is a props and you want to emit an event because form is not mutable. |
 
 # FormSchema 
 
