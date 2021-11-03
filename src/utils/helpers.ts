@@ -19,6 +19,16 @@ export const extractIntegerValue = (value: any, defaultValue = 0): number => {
   return isNaN(parsed) ? defaultValue : parsed;
 };
 
+export const extractNameAndDirectionFromOrderItemString = (orderItemWithDirection: string): {orderItem: string, isDesc: boolean} => {
+  let isDesc = false;
+  let orderItem = orderItemWithDirection;
+  if (orderItemWithDirection.startsWith("-")) {
+    orderItem = orderItemWithDirection.replace("-", "");
+    isDesc = true;
+  }
+  return {orderItem, isDesc}
+} 
+
 export const getSortsArrayFromOrdering = (ordering: Array<string>|null): VuetifySortArraysObject => {
   if (!ordering) {
     return { sortBy: [], sortDesc: [] };
@@ -26,12 +36,8 @@ export const getSortsArrayFromOrdering = (ordering: Array<string>|null): Vuetify
   const sortBy: Array<string> = [];
   const sortDesc: Array<boolean> = [];
 
-  ordering.forEach(orderItem => {
-    let isDesc = false;
-    if (orderItem.startsWith("-")) {
-      orderItem = orderItem.replace("-", "");
-      isDesc = true;
-    }
+  ordering.forEach(orderItemWithDirection => {
+    let {orderItem, isDesc} = extractNameAndDirectionFromOrderItemString(orderItemWithDirection);
     sortBy.push(orderItem);
     sortDesc.push(isDesc);
   });

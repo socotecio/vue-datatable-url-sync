@@ -2,7 +2,8 @@ import {
   elementToArrayOfInt,
   elementToArrayOfString,
   extractBooleanValue,
-  extractIntegerValue
+  extractIntegerValue,
+  extractNameAndDirectionFromOrderItemString
 } from "./helpers";
 import isEqual from "lodash.isequal";
 import {GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema} from "./VDUSTypes"
@@ -55,6 +56,17 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
   return value === null || isValueDefault;
 }
 
+const getServerNameOfKeyWithSchema = (key: string, schema?: VDUSFormSchema) => {
+  // by default the quey key is the same that the form key
+  let queryKey = key;
+  // But this can be overrided if name attribute is defined in the param schema
+  if (schema && schema[key] && schema[key].name) {
+    queryKey = (schema[key].name as string); // typescript error because .name can be undefined but if check it before
+  }
+
+  return queryKey
+}
+
 /*
   This function take a object in parameter that is often a form of filtering field
   all this field are filtered before being used to be transformed as a query url
@@ -69,13 +81,24 @@ const generateQueryFromObject = (object: GenericDictionnary, schema?: VDUSFormSc
       continue;
     }
 
-    // by default the quey key is the same that the form key
-    let queryKey = key;
-    // But this can be overrided if name attribute is defined in the param schema
-    if (!localName && schema && schema[key] && schema[key].name) {
-      queryKey = (schema[key].name as string); // typescript error because .name can be undefined but if check it before
+    if(localName) {
+      queryUrl[key] = value;
+      continue
     }
 
+    // If the key is ordering we need to check each field of the ordering if there is a server name associated in the schema
+    if (key === "ordering") {
+      let orderingArrayWithServerName: Array<string> = []
+      value.forEach((orderItemWithDirection: string) => {
+        let {orderItem, isDesc} = extractNameAndDirectionFromOrderItemString(orderItemWithDirection)
+        let orderItemQueryKey = getServerNameOfKeyWithSchema(orderItem, schema)
+        orderingArrayWithServerName.push(`${isDesc ? "-" : ""}${orderItemQueryKey}`)
+      });
+
+      queryUrl[key] = orderingArrayWithServerName
+    }
+
+    let queryKey = getServerNameOfKeyWithSchema(key, schema)
     queryUrl[queryKey] = value;
   }
   return queryUrl;
