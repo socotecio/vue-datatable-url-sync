@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/node:4.9.0
+      - image: circleci/node:5.0.1
     steps:
       - checkout
       - run: npm install
