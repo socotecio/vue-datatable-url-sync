@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:5.0.2
+      - image: circleci/node:latest
     steps:
       - checkout
       - run: npm install
@@ -10,7 +10,7 @@ jobs:
 
   release:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:4.7.0
     steps:
       - checkout
       - run: npm install
