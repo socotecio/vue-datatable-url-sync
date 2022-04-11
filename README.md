@@ -142,3 +142,8 @@ Here is the description of the type for the configuration of each params ([Param
 | [VDUSFormSchema](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L11) | Object describing how to handle the form and options object passed as parameter of useDatatableUrlSync |
 | [VDUSDatatableOptions](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L15) | Object describing the params accepted in the datatable options |
 | [VDUSConfiguration](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L21) | Configuration object for vue datatable url sync |
+
+
+# Local dev
+
+You can use vue3-example to test local dev. You just have to go to vue3-example/src/components/HelloWorld.vue and uncomment the relative import of VDUS.

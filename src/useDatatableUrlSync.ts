@@ -54,7 +54,7 @@ export default function useDatatableUrlSync(route: any, router: any, form: Ref<G
   const loading = ref<boolean>(false);
   let disableRouterWatch = false;
 
-  const debounceSearch = debounce(isFilter => {
+  const debounceSearch = debounce((isFilter:boolean) => {
     localQuery = triggerSearchIfNeeded(isFilter, getDatas);
   }, configurations?.debounceTime || 0);
 
