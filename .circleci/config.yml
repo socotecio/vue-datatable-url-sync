@@ -1,8 +1,8 @@
-version: 2
+version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:5.0.1
+      - image: circleci/node:5.0.2
     steps:
       - checkout
       - run: npm install
