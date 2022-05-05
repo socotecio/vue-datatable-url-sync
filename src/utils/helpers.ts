@@ -14,6 +14,23 @@ export const extractBooleanValue = (value: any, defaultValue:boolean|null = true
   return value ? value.toString() === "true" : defaultValue;
 };
 
+export const extractNullBooleanValue = (value: any, defaultValue:boolean|null = true): boolean|null => {
+  if(value === null) {
+    return null
+  }
+  if(value.toString() === "true") {
+    return true
+  }
+  if(value.toString() === "false") {
+    return false
+  }
+  if(["null", ""].includes(value.toString())) {
+    return null
+  }
+  return defaultValue
+};
+
+
 export const extractIntegerValue = (value: any, defaultValue = 0): number => {
   const parsed = parseInt(value);
   return isNaN(parsed) ? defaultValue : parsed;

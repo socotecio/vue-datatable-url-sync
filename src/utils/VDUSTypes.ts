@@ -5,7 +5,7 @@ type GenericDictionnary = {
 type VDUSParamSchema = {
   name?: string;
   default?: any;
-  type?: "string" | "boolean" | "integer" | "arrayInt" | "arrayString";
+  type?: "string" | "boolean" | "integer" | "arrayInt" | "arrayString" | "nullBoolean";
 }
 
 type VDUSFormSchema = {

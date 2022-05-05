@@ -7,7 +7,7 @@
       <div
         v-for="header in headers"
         :key="header"
-        class="col width-40 border-right border-bottom"
+        class="col width-30 border-right border-bottom"
       >
         <p>{{ header }}</p>
         <BaseOrdering
@@ -25,7 +25,7 @@
       <div
         v-for="(value, key) in item"
         :key="key"
-        class="col width-40 border-right"
+        class="col width-30 border-right"
       >
         <p>{{ value }}</p>
       </div>
@@ -139,6 +139,9 @@ export default {
 }
 .width-40 {
   width: 40%;
+}
+.width-30 {
+  width: 30%;
 }
 .mt-8 {
   margin-top: 32px;

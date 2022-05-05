@@ -301,6 +301,7 @@ export default function useDatatableUrlSync(route: any, router: any, form: Ref<G
       formSchema,
       removedParams
     );
+
     const formUpdated = updateFormIfNeeded(newForm);
 
     // If the form is updated because an other component pushed a new value that we was watching

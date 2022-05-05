@@ -2,6 +2,7 @@ import {
   elementToArrayOfInt,
   elementToArrayOfString,
   extractBooleanValue,
+  extractNullBooleanValue,
   extractIntegerValue
 } from "./helpers";
 import isEqual from "lodash.isequal";
@@ -31,8 +32,12 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
   let isValueDefault: boolean = value === "";
 
   if (schema && schema[param]) {
+    // We have a special case for nullBoolean because we can have null value that is not the default
+    if(schema[param]?.type === "nullBoolean") {
+      return schema[param].default === extractNullBooleanValue(value, schema[param].default)
+    }
     // if there is a defautl value we change the condition to is non equality
-    if (schema[param].default) {
+    if (typeof(schema[param].default) !== "undefined") {
       // TODO default value for array need to be stringify ?
       if (Array.isArray(value)) {
         isValueDefault = isEqual(value, schema[param].default) || !value.length;
@@ -44,6 +49,9 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
     else if (schema[param].type === "boolean") {
       // Default for boolean is false
       isValueDefault = value === false;
+    } else if (schema[param].type === "nullBoolean") {
+      // Default for null boolean is null.
+      isValueDefault = value === '';
     } else if (["arrayInt", "arrayString"].includes(schema[param].type as string)) {
       // Default for array is empty array or first element null or empty
       isValueDefault =
@@ -63,7 +71,7 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
   */
 const generateQueryFromObject = (object: GenericDictionnary, schema?: VDUSFormSchema, localName = true): GenericDictionnary => {
   const queryUrl: GenericDictionnary = {};
-  for (const [key, value] of Object.entries(object)) {
+  for (let [key, value] of Object.entries(object)) {
     // We do not want to send a default value
     if (isValueDefault(value, key, schema)) {
       continue;
@@ -87,6 +95,9 @@ const convertParamIfTypeInSchema = (query: GenericDictionnary, param: string, sc
   }
   if (schema[param].type === "boolean") {
     return extractBooleanValue(query[prefix + param]);
+  }
+  if (schema[param].type === "nullBoolean") {
+    return extractNullBooleanValue(query[prefix + param], schema[param].default);
   }
   if (schema[param].type === "integer") {
     return extractIntegerValue(query[prefix + param]);

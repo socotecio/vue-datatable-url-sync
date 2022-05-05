@@ -4,17 +4,29 @@
     <p>The order is alphabetical but this is the example behavior you can implement what you want</p>
 
     <div class="row mt-8">
-      <label for="search">Search: </label>
-      <input
-        id="search"
-        v-model="form.search"
-      >
+      <div class="width-40">
+        <label for="search">Search: </label>
+        <input
+          id="search"
+          v-model="form.search"
+        >
+      </div>
+      <div class="width-40">
+        
+        <label for="answered-select">Is answered: </label>
+
+        <select name="answered" id="answered-select" v-model="form.is_answered">
+            <option :value="null">Not answered</option>
+            <option :value="false">Answer is false</option>
+            <option :value="true">Answer is true</option>
+        </select>
+      </div>
     </div>
 
     <SimpleDatatable
       v-model:options="options"
       :items="items"
-      :headers="['id', 'title']"
+      :headers="['id', 'title', 'is_answered']"
     />
   </div>
 </template>
@@ -22,9 +34,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import useDatatableUrlSync from 'vue-datatable-url-sync';
-import { GenericDictionnary, VDUSDatatableOptions } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
+import { GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
 // import useDatatableUrlSync from '../../../src/useDatatableUrlSync';
-// import { GenericDictionnary, VDUSDatatableOptions } from '../../../src/utils/VDUSTypes';
+// import { GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema } from '../../../src/utils/VDUSTypes';
 import fakeData from "./data.js";
 import SimpleDatatable from './SimpleDatatable.vue';
 import { useRoute, useRouter } from "vue-router";
@@ -32,6 +44,7 @@ import { useRoute, useRouter } from "vue-router";
 type FakeDataItem = {
   id: string;
   title: string;
+  is_answered: boolean;
 }
 
 export default defineComponent({
@@ -42,7 +55,8 @@ export default defineComponent({
   setup () {
     // --------------------- DATA ------------------------------------
     const form = ref<GenericDictionnary>({
-      search: ""
+      search: "",
+      is_answered: false
     })
     const options = ref<VDUSDatatableOptions>({
         page: 1,
@@ -51,17 +65,29 @@ export default defineComponent({
     })
     const items = ref<any>([])
 
+    const formSchema = ref<VDUSFormSchema>({
+      is_answered: { type: "nullBoolean", default: false }
+    })
+
     // --------------------- METHODS ------------------------------------
     const filterData = (fakeData: Array<FakeDataItem>, queryAsObject: GenericDictionnary): Array<FakeDataItem> => {
       if (typeof queryAsObject.search !== "undefined") {
         fakeData = fakeData.filter(data => {
           let respondToFilter = false;
           Object.values(data).forEach((value: any) => {
+            if(typeof(value) !== "string") {
+              value = `${value}`
+            }
             if (value.includes(queryAsObject.search)) {
               respondToFilter = true
             }
           })
           return respondToFilter
+        })
+      }
+      if (typeof queryAsObject.is_answered !== "undefined") {
+        fakeData = fakeData.filter(data => {
+          return data.is_answered === queryAsObject.is_answered
         })
       }
 
@@ -75,9 +101,9 @@ export default defineComponent({
 
         fakeData = fakeData.sort((a: GenericDictionnary, b: GenericDictionnary) => {
           if(reverse) {
-            return a[orderingKey].localeCompare(b[orderingKey])
+            return `${a[orderingKey]}`.localeCompare(b[orderingKey])
           }
-          return b[orderingKey].localeCompare(a[orderingKey])
+          return `${b[orderingKey]}`.localeCompare(a[orderingKey])
         })
       }
 
@@ -89,7 +115,7 @@ export default defineComponent({
     }
 
     // --------------------- CREATED ------------------------------------
-    useDatatableUrlSync(useRoute(), useRouter(), form, fetchDatas, options)
+    useDatatableUrlSync(useRoute(), useRouter(), form, fetchDatas, options, formSchema.value)
 
     // --------------------- INSTANCE ------------------------------------
     return {

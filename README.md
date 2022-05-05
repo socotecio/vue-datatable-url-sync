@@ -144,6 +144,11 @@ Here is the description of the type for the configuration of each params ([Param
 | [VDUSConfiguration](https://github.com/socotecio/vue-datatable-url-sync/blob/main/src/utils/VDUSTypes.ts#L21) | Configuration object for vue datatable url sync |
 
 
+# LIMITATIONS
+
+1. If you use nullBoolean type and the default value is not null but false or true no query will be send for null value as by default we can't pass null value in the url. If the feature is important please use an empty string '' instead of the null value and transform the empty string to null value in the fetchData method.
+
 # Local dev
 
 You can use vue3-example to test local dev. You just have to go to vue3-example/src/components/HelloWorld.vue and uncomment the relative import of VDUS.
+Do not forget to launch `npm install` in both root directory AND vue3-example directory
