@@ -56,7 +56,7 @@ export default defineComponent({
     // --------------------- DATA ------------------------------------
     const form = ref<GenericDictionnary>({
       search: "",
-      is_answered: false
+      is_answered: null
     })
     const options = ref<VDUSDatatableOptions>({
         page: 1,
@@ -66,7 +66,7 @@ export default defineComponent({
     const items = ref<any>([])
 
     const formSchema = ref<VDUSFormSchema>({
-      is_answered: { type: "nullBoolean", default: false }
+      is_answered: { type: "nullBoolean" }
     })
 
     // --------------------- METHODS ------------------------------------
@@ -85,7 +85,7 @@ export default defineComponent({
           return respondToFilter
         })
       }
-      if (typeof queryAsObject.is_answered !== "undefined") {
+      if (typeof queryAsObject.is_answered !== "undefined" && queryAsObject.is_answered !== null) {
         fakeData = fakeData.filter(data => {
           return data.is_answered === queryAsObject.is_answered
         })

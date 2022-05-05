@@ -32,12 +32,12 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
   let isValueDefault: boolean = value === "";
 
   if (schema && schema[param]) {
-    // We have a special case for nullBoolean because we can have null value that is not the default
-    if(schema[param]?.type === "nullBoolean") {
-      return schema[param].default === extractNullBooleanValue(value, schema[param].default)
-    }
     // if there is a defautl value we change the condition to is non equality
     if (typeof(schema[param].default) !== "undefined") {
+      // We have a special case for nullBoolean because we can have null value that is not the default
+      if(schema[param]?.type === "nullBoolean") {
+        return schema[param].default === extractNullBooleanValue(value, schema[param].default)
+      }
       // TODO default value for array need to be stringify ?
       if (Array.isArray(value)) {
         isValueDefault = isEqual(value, schema[param].default) || !value.length;
