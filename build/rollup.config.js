@@ -8,7 +8,6 @@ import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import { babel } from '@rollup/plugin-babel';
-import pascalcase from 'pascalcase';
 
 const pkg = require('../package.json');
 const name = pkg.name;
@@ -94,7 +93,7 @@ function createConfig(format, output, plugins = []) {
   const isNodeBuild = format === 'cjs';
   const isBundlerESMBuild = /esm-bundler/.test(format);
 
-  if (isGlobalBuild) output.name = pascalcase(pkg.name);
+  if (isGlobalBuild) output.name = "VueDatatableUrlSync";
 
   const shouldEmitDeclarations = !hasTSChecked;
 

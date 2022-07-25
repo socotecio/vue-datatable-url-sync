@@ -25,11 +25,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import useDatatableUrlSync from 'vue-datatable-url-sync';
-import { GenericDictionnary, VDUSDatatableOptions } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
-import fakeData from "./data";
-import { ref } from '@vue/composition-api'
-import { useRouter, useRoute } from 'vue2-helpers/vue-router';
+// import useDatatableUrlSync from 'vue-datatable-url-sync';
+// import { GenericDictionnary, VDUSDatatableOptions } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
+import useDatatableUrlSync from '../../../src/useDatatableUrlSync';
+import { GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema } from '../../../src/utils/VDUSTypes';
+import fakeData from "./data.js";
+import { ref } from 'vue'
+// import { useRouter, useRoute } from 'vue2-helpers/vue-router';
+import { useRoute, useRouter } from "@/router/composable.js";
 
 export default Vue.extend({
   name: 'HelloWorld',

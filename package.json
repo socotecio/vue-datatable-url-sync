@@ -20,7 +20,6 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
-    "vue-demi": "^0.6.2",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
@@ -42,7 +41,8 @@
     "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
-    "@vue/test-utils": "^2.0.0-rc.4",
+    "@vue/test-utils": "^2.0.2",
+    "@vue/vue3-jest": "^28.0.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-typescript": "^0.14.0",
@@ -52,13 +52,13 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
     "rollup-plugin-vue": "^6.0.0",
-    "ts-jest": "^26.5.4",
+    "ts-jest": "^27.1.5",
     "typescript": "~4.5.5",
     "vue": "^3.0.0",
     "vue-jest": "^5.0.0-0"
   },
   "peerDependencies": {
-    "vue": "^2.6.0 || >=3.0.0-rc.0",
+    "vue": "^2.7.0 || >=3.0.0-rc.0",
     "@vue/composition-api": "^1.0.0-rc.2"
   },
   "browserslist": [
