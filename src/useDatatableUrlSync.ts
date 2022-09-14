@@ -317,6 +317,11 @@ export default function useDatatableUrlSync(route: any, router: any, form: Ref<G
       initializeForm();
     }
 
+    localQuery = {
+      ...generateQueryFromObject(form.value, formSchema, false),
+      ...generateQueryFromObject(options.value, formSchema, false),
+    }
+
     getDatas()
   }
 
