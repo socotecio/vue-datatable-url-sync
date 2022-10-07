@@ -13,7 +13,7 @@ import {
 import cloneDeep from "lodash.clonedeep";
 import isEqual from "lodash.isequal";
 
-import { ref, watch, nextTick, computed, Ref } from 'vue'
+import { ref, watch, nextTick, computed, Ref } from 'vue-demi'
 import {GenericDictionnary, VDUSConfiguration, VuetifyOptions, VDUSFormSchema, VDUSDatatableOptions} from "./utils/VDUSTypes"
 
 /*
