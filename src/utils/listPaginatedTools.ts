@@ -71,7 +71,7 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
   */
 const generateQueryFromObject = (object: GenericDictionnary, schema?: VDUSFormSchema, localName = true): GenericDictionnary => {
   const queryUrl: GenericDictionnary = {};
-  for (let [key, value] of Object.entries(object)) {
+  for (const [key, value] of Object.entries(object)) {
     // We do not want to send a default value
     if (isValueDefault(value, key, schema)) {
       continue;
