@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 
-import ts from 'rollup-plugin-typescript2';
+import ts from '@rollup/plugin-typescript';
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -30,9 +30,6 @@ const banner = `/*!
   * (c) ${new Date().getFullYear()} ${getAuthors(pkg)}
   * @license MIT
   */`;
-
-// ensure TS checks only once for each build
-let hasTSChecked = false;
 
 const outputConfigs = {
   // each file name has the format: `dist/${name}.${format}.js`
@@ -95,25 +92,10 @@ function createConfig(format, output, plugins = []) {
 
   if (isGlobalBuild) output.name = "VueDatatableUrlSync";
 
-  const shouldEmitDeclarations = !hasTSChecked;
 
   const tsPlugin = ts({
-    check: !hasTSChecked,
     tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-    cacheRoot: path.resolve(__dirname, '../node_modules/.rts2_cache'),
-    tsconfigOverride: {
-      compilerOptions: {
-        sourceMap: output.sourcemap,
-        declaration: shouldEmitDeclarations,
-        declarationMap: shouldEmitDeclarations,
-      },
-      exclude: ['__tests__', 'test-dts'],
-    },
   });
-  // we only need to check TS and generate declarations once for each build.
-  // it also seems to run into weird issues when checking multiple times
-  // during a single build.
-  hasTSChecked = true;
 
   const external = ['vue-demi'];
 
@@ -197,7 +179,7 @@ function createProductionConfig(format) {
 }
 
 function createMinifiedConfig(format) {
-  const { terser } = require('rollup-plugin-terser');
+  const terser = require('@rollup/plugin-terser');
   return createConfig(
     format,
     {
