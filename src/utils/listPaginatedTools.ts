@@ -9,7 +9,7 @@ import isEqual from "lodash.isequal";
 import {GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema} from "./VDUSTypes"
 
 const getDefaultValueForParam = (param: string, schema?: VDUSFormSchema): any => {
-  if (schema && schema[param]) {
+  if (schema?.[param]) {
     // if there is a defautl value we change the condition to is non equality
     if (schema[param].default) {
       // TODO default value for array need to be stringify ?
@@ -31,7 +31,7 @@ const isValueDefault = (value: any, param: string, schema?: VDUSFormSchema): boo
   // Default is string
   let isValueDefault: boolean = value === "";
 
-  if (schema && schema[param]) {
+  if (schema?.[param]) {
     // if there is a defautl value we change the condition to is non equality
     if (typeof(schema[param].default) !== "undefined") {
       // We have a special case for nullBoolean because we can have null value that is not the default
@@ -79,18 +79,36 @@ const generateQueryFromObject = (object: GenericDictionnary, schema?: VDUSFormSc
 
     // by default the quey key is the same that the form key
     let queryKey = key;
+    let queryValue = value;
     // But this can be overrided if name attribute is defined in the param schema
-    if (!localName && schema && schema[key] && schema[key].name) {
+    if (!localName && schema?.[key]?.name) {
       queryKey = (schema[key].name as string); // typescript error because .name can be undefined but if check it before
     }
 
-    queryUrl[queryKey] = value;
+    // As ordering key is a special key where other key can be specified inside its value we need to check for each ordernig key if there is a different server name
+    if (key === 'ordering' && !localName && value && Array.isArray(value)) {
+      queryValue = value.map((orderItem: string) => {
+        let prefix = ""
+        // If we have a desc order we need to remove the - to match with the schema
+        if (orderItem.startsWith("-")) {
+          orderItem = orderItem.replace("-", "");
+          prefix = "-"
+        }
+        // Look if we have a specific server name for this attribute in the schema.
+        if(schema?.[orderItem]?.name) {
+          orderItem = (schema[orderItem].name as string)
+        }
+        // Do not forget to add the prefix to have the correct ordering
+        return `${prefix}${orderItem}`;
+      })
+    }
+    queryUrl[queryKey] = queryValue;
   }
   return queryUrl;
 }
 
 const convertParamIfTypeInSchema = (query: GenericDictionnary, param: string, schema?: VDUSFormSchema, prefix = ""): any => {
-  if (!schema || !schema[param] || !schema[param].type) {
+  if (!schema?.[param]?.type) {
     return query[prefix + param];
   }
   if (schema[param].type === "boolean") {
