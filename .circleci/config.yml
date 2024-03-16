@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: cimg/node:18.15
+      - image: cimg/node:20.11.1
     steps:
       - checkout
       - run: npm install
@@ -10,7 +10,7 @@ jobs:
 
   release:
     docker:
-      - image: cimg/node:18.15
+      - image: cimg/node:20.11.1
     steps:
       - checkout
       - run: npm install
