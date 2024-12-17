@@ -1,29 +1,40 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link>
-  </div>
-  <router-view/>
+  <v-app>
+    <v-main>
+      <v-navigation-drawer
+        permanent
+      >
+        <v-list>
+          <v-list-item
+            prepend-icon="mdi-view-dashboard"
+            title="Home (vuetify datatable)"
+            to="/"
+          />
+          <v-list-item
+            prepend-icon="mdi-account-box"
+            title="Simple Datatable"
+            to="/simple"
+          />
+          <v-list-item
+            prepend-icon="mdi-gavel"
+            title="Multiple Datatable"
+            to="/multiple-datatable"
+          />
+        </v-list>
+
+        <template #append>
+          <div class="pa-2">
+            <v-btn block>
+              Logout
+            </v-btn>
+          </div>
+        </template>
+      </v-navigation-drawer>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<script lang="ts" setup>
+  //
+</script>

@@ -4,59 +4,56 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: "BaseOrdering",
-  props: {
-    value: {
-      type: Array,
-      required: true
-    },
-    field: {
-      type: String,
-      required: true
-    },
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps({
+  value: {
+    type: Array as () => string[],
+    required: true
   },
-  emits: ['input'],
-  data() {
-    return {};
-  },
-  computed: {
-    valueField() {
-      if (this.value[0] && this.value[0].startsWith("-")) {
-        return this.value[0].substring(1);
-      }
-      return this.value[0];
-    },
-    isDesc() {
-      return this.valueField === this.field && this.value[0].startsWith("-");
-    },
-    isAsc() {
-      return this.valueField === this.field && !this.value[0].startsWith("-");
-    },
-    isEmptyString() {
-      return this.valueField !== this.field;
-    },
-    buttonText() {
-      if (this.isEmptyString) {
-        return "Order Asc"
-      } else if (this.isAsc) {
-        return "Order Desc"
-      }
-      return "Cancel Order"
-    }
-  },
-  methods: {
-    emitOrdering() {
-      let emitValue = [];
-      if (this.isEmptyString) {
-        emitValue = [this.field];
-      } else if (this.isAsc) {
-        emitValue = [`-${this.field}`];
-      }
-      // if IsAsc return null so okay
-      return this.$emit("input", emitValue);
-    }
+  field: {
+    type: String,
+    required: true
   }
-};
+})
+
+const emit = defineEmits<{
+  (e: 'input', value: string[]): void
+}>()
+
+const valueField = computed(() => {
+  const firstVal = props.value[0]
+  if (firstVal && firstVal.startsWith("-")) {
+    return firstVal.substring(1)
+  }
+  return firstVal
+})
+
+// const isDesc = computed(() => valueField.value === props.field && props.value[0]?.startsWith("-"))
+const isAsc = computed(() => valueField.value === props.field && !props.value[0]?.startsWith("-"))
+const isEmptyString = computed(() => valueField.value !== props.field)
+
+const buttonText = computed(() => {
+  if (isEmptyString.value) {
+    return "Order Asc"
+  } else if (isAsc.value) {
+    return "Order Desc"
+  }
+  return "Cancel Order"
+})
+
+function emitOrdering() {
+  let emitValue: string[] = []
+  if (isEmptyString.value) {
+    // currently no ordering, set to ascending
+    emitValue = [props.field]
+  } else if (isAsc.value) {
+    // currently ascending, set to descending
+    emitValue = [`-${props.field}`]
+  } 
+  // else if isDesc: currently descending, clear the ordering (empty array)
+
+  emit('input', emitValue)
+}
 </script>

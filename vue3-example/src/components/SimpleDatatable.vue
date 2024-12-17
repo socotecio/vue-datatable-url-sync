@@ -13,7 +13,7 @@
         <BaseOrdering
           :field="header"
           :value="options.ordering"
-          @input="emitOptions('ordering', $event)"
+          @input="(value: string[]) => emitOptions('ordering', value)"
         />
       </div>
     </div>
@@ -34,8 +34,8 @@
       <div class="col width-40">
         <label>Item per page: </label>
         <select
-          :modelValue="options.page_size"
-          @change="emitOptions('page_size', parseInt($event.target.value))"
+          :value="options.page_size"
+          @change="($event) => emitOptions('page_size', parseInt($event.target?.value))"
         >
           <option
             v-for="itemNumber in [5, 10, 20]"
@@ -51,13 +51,13 @@
       <div class="col width-40">
         <button
           v-if="options.page > 1"
-          @click="emitOptions('page', options.page-1)"
+          @click="emitOptions('page', options.page - 1)"
         >
           Prev. page
         </button>
         <button
           v-if="lastVisibleIndex < items.length"
-          @click="emitOptions('page', options.page+1)"
+          @click="emitOptions('page', options.page + 1)"
         >
           Next page
         </button>
@@ -66,64 +66,66 @@
   </div>
 </template>
 
-<script>
-import BaseOrdering from "./BaseOrdering";
+<script setup lang="ts">
+import { computed } from 'vue'
 
-export default {
-  name: "SimpleDatatable",
-  components: {
-    BaseOrdering
+interface Item {
+  [key: string]: any
+}
+
+interface Options {
+  page: number
+  page_size: number
+  ordering: string[]
+}
+
+const props = defineProps({
+  items: {
+    type: Array<Item>,
+    default: () => []
   },
-  props: {
-    items: {
-      type: Array,
-      default: () => []
-    },
-    headers: {
-      type: Array,
-      default: () => []
-    },
-    itemKey: {
-      type: String,
-      default: "id"
-    },
-    options: {
-      type: Object,
-      default: () => ({
-        page: 1,
-        page_size: 10,
-        ordering: []
-      })
-    }
+  headers: {
+    type: Array<string>,
+    default: () => []
   },
-  emits: ['update:options'],
-  computed: {
-    firstVisibleIndex() {
-      return ((this.options.page ?? 1) - 1) * this.options.page_size ?? 10;
-    },
-    lastVisibleIndex() {
-      return (this.options.page ?? 1) * this.options.page_size ?? 10;
-    },
-    currentItems() {
-      if(this.lastVisibleIndex > this.items.length) {
-        return this.items.slice(this.firstVisibleIndex)
-      }
-      return this.items.slice(this.firstVisibleIndex, this.lastVisibleIndex)
-    }
+  itemKey: {
+    type: String,
+    default: "id"
   },
-  methods: {
-    emitOptions(optionKey, value) {
-      const newOptions = {
-        ...this.options,
-        [optionKey]: value
-      }
-      this.$emit("update:options", newOptions)
-    }
+  options: {
+    type: Object as () => Options,
+    default: () => ({
+      page: 1,
+      page_size: 10,
+      ordering: []
+    })
   }
+})
+
+const emit = defineEmits<{
+  (e: 'update:options', value: Options): void;
+}>()
+
+const firstVisibleIndex = computed(() => ((props.options.page ?? 1) - 1) * (props.options.page_size ?? 10))
+const lastVisibleIndex = computed(() => (props.options.page ?? 1) * (props.options.page_size ?? 10))
+
+const currentItems = computed(() => {
+  if (lastVisibleIndex.value > props.items.length) {
+    return props.items.slice(firstVisibleIndex.value)
+  }
+  return props.items.slice(firstVisibleIndex.value, lastVisibleIndex.value)
+})
+
+function emitOptions<K extends keyof Options>(optionKey: K, value: Options[K]) {
+  const newOptions = {
+    ...props.options,
+    [optionKey]: value
+  }
+  emit("update:options", newOptions)
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   width: 600px;
   margin: auto;

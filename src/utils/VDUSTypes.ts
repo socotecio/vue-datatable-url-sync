@@ -27,7 +27,7 @@ type VDUSConfiguration = {
 }
 
 type VuetifySortArraysObject = {
-  sortBy: Array<string>;
+  sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }>;
   sortDesc: Array<boolean>;
 }
 
