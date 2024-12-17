@@ -1,50 +1,43 @@
 <template>
-  <v-container class="fill-height">
-    <v-responsive
-      class="align-centerfill-height mx-auto"
-      max-width="900"
-    >
-      <v-row>
-        <v-col cols="12">
-          <v-form>
-            <v-text-field
-              v-model="form.search"
-              label="search"
-            />
-            <v-checkbox
-              v-model="form.is_answered"
-              label="is Answered"
-            />
-          </v-form>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-card
-            class="py-4"
-            rounded="lg"
-            variant="outlined"
-          >
-            <template #text>
-              <v-data-table 
-                :items="items"
-                :page="vuetifyOptions.page"
-                :items-per-page="vuetifyOptions.itemsPerPage"
-                :sort-by="vuetifyOptions.sortBy"
-                v-model:options="vuetifyOptions"
-              />
-            </template>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-responsive>
-  </v-container>
+  <v-row>
+    <v-col cols="12">
+      <v-form>
+        <v-text-field
+          v-model="form.search"
+          label="search"
+        />
+        <v-checkbox
+          v-model="form.is_answered"
+          label="is Answered"
+        />
+      </v-form>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12">
+      <v-card
+        class="py-4"
+        rounded="lg"
+        variant="outlined"
+      >
+        <template #text>
+          <v-data-table 
+            v-model:options="vuetifyOptions"
+            :items="items"
+            :page="vuetifyOptions.page"
+            :items-per-page="vuetifyOptions.itemsPerPage"
+            :sort-by="vuetifyOptions.sortBy"
+          />
+        </template>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import useDatatableUrlSync from '../../../src/useDatatableUrlSync';
-import type { GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema } from '../../../src/utils/VDUSTypes';
+import type { GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema, VDUSConfiguration } from '../../../src/utils/VDUSTypes';
 // import useDatatableUrlSync from 'vue-datatable-url-sync';
 // import type { GenericDictionnary, VDUSDatatableOptions, VDUSFormSchema } from 'vue-datatable-url-sync/src/utils/VDUSTypes';
 import fakeData from "../assets/data/data.js";
@@ -55,6 +48,14 @@ type FakeDataItem = {
   title: string;
   is_answered: boolean;
 };
+
+// --------------------- PROPS ------------------------------------
+const props = defineProps({
+  prefix: {
+    type: String,
+    default: ""
+  },
+})
 
 // --------------------- DATA ------------------------------------
 const form = ref<GenericDictionnary>({
@@ -68,10 +69,15 @@ const options = ref<VDUSDatatableOptions>({
   ordering: []
 });
 
+const configurations = ref<VDUSConfiguration>({
+  prefix: props.prefix,
+  serveurDefaultPageSize: 10,
+})
+
 const items = ref<FakeDataItem[]>([]);
 
 const formSchema = ref<VDUSFormSchema>({
-  is_answered: { type: "boolean" }
+  is_answered: { type: "boolean" },
 });
 
 // --------------------- METHODS ------------------------------------
@@ -121,5 +127,5 @@ const fetchDatas = (queryParams: string, queryAsObject: GenericDictionnary) => {
 };
 
 // --------------------- CREATED ------------------------------------
-const {vuetifyOptions} = useDatatableUrlSync(useRoute(), useRouter(), form, fetchDatas, options, formSchema.value);
+const {vuetifyOptions} = useDatatableUrlSync(useRoute(), useRouter(), form, fetchDatas, options, formSchema.value, null, configurations.value);
 </script>

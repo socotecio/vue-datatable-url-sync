@@ -41,9 +41,11 @@ export default function useDatatableUrlSync(route: any, router: any, form: Ref<G
     ordering: [],
     ...options.value
   }
+  // This is just a convenient shortcut. You should speicify the page_size default in formSchema. But as it is already passed in options in the first call we can guess it. As you may pass a non default value on the first call you still can override the formSchema for more complex use case
+  const frontDefaultPageSize = options.value.page_size ?? configurations.serveurDefaultPageSize
   formSchema = {
     page: { type: "integer", default: 1 },
-    page_size: { type: "integer", default: 10 },
+    page_size: { type: "integer", default: frontDefaultPageSize },
     ordering: { type: "arrayString", default: [] },
     ...formSchema || {}
   }

@@ -27,15 +27,15 @@ type VDUSConfiguration = {
 }
 
 type VuetifySortArraysObject = {
-  sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }>;
-  sortDesc: Array<boolean>;
+  sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }>; // depending if vuetify 2 or 3
+  sortDesc: Array<boolean>; // not existing in vuetify 3
 }
 
 type VuetifyOptions = {
   page: number;
   itemsPerPage: number;
-  sortBy: Array<string>;
-  sortDesc: Array<boolean>;
+  sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }>; // depending if vuetify 2 or 3
+  sortDesc: Array<boolean>; // not existing in vuetify 3
   groupBy: Array<string>;
   groupDesc: Array<boolean>;
   multiSort: boolean;

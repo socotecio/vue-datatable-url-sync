@@ -18,19 +18,18 @@
           <v-list-item
             prepend-icon="mdi-gavel"
             title="Multiple Datatable"
-            to="/multiple-datatable"
+            to="/multiple-vuetify"
           />
         </v-list>
-
-        <template #append>
-          <div class="pa-2">
-            <v-btn block>
-              Logout
-            </v-btn>
-          </div>
-        </template>
       </v-navigation-drawer>
-      <router-view />
+      <v-container class="fill-height">
+        <v-responsive
+          class="align-centerfill-height mx-auto"
+          max-width="900"
+        >
+          <router-view />
+        </v-responsive>
+      </v-container>
     </v-main>
   </v-app>
 </template>

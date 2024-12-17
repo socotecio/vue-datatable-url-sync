@@ -1,67 +1,65 @@
 <template>
-  <div class="container">
-    <div class="mt-8">
-      Datatable
-    </div>
-    <div class="mt-8 row"> 
-      <div
-        v-for="header in headers"
-        :key="header"
-        class="col width-30 border-right border-bottom"
-      >
-        <p>{{ header }}</p>
-        <BaseOrdering
-          :field="header"
-          :value="options.ordering"
-          @input="(value: string[]) => emitOptions('ordering', value)"
-        />
-      </div>
-    </div>
+  <div class="mt-8">
+    Datatable
+  </div>
+  <div class="mt-8 row"> 
     <div
-      v-for="item in currentItems"
-      :key="item[itemKey]"
-      class="row"
+      v-for="header in headers"
+      :key="header"
+      class="col width-30 border-right border-bottom"
     >
-      <div
-        v-for="(value, key) in item"
-        :key="key"
-        class="col width-30 border-right"
-      >
-        <p>{{ value }}</p>
-      </div>
+      <p>{{ header }}</p>
+      <BaseOrdering
+        :field="header"
+        :value="options.ordering"
+        @input="(value: string[]) => emitOptions('ordering', value)"
+      />
     </div>
-    <div class="mt-4 row">
-      <div class="col width-40">
-        <label>Item per page: </label>
-        <select
-          :value="options.page_size"
-          @change="($event) => emitOptions('page_size', parseInt($event.target?.value))"
+  </div>
+  <div
+    v-for="item in currentItems"
+    :key="item[itemKey]"
+    class="row"
+  >
+    <div
+      v-for="(value, key) in item"
+      :key="key"
+      class="col width-30 border-right"
+    >
+      <p>{{ value }}</p>
+    </div>
+  </div>
+  <div class="mt-4 row">
+    <div class="col width-40">
+      <label>Item per page: </label>
+      <select
+        :value="options.page_size"
+        @change="($event) => emitOptions('page_size', parseInt($event.target?.value))"
+      >
+        <option
+          v-for="itemNumber in [5, 10, 20]"
+          :key="itemNumber"
+          :selected="options.page_size === itemNumber"
+          :value="itemNumber"
         >
-          <option
-            v-for="itemNumber in [5, 10, 20]"
-            :key="itemNumber"
-            :selected="options.page_size === itemNumber"
-            :value="itemNumber"
-          >
-            {{ itemNumber }}
-          </option>
-        </select>
-      </div>
+          {{ itemNumber }}
+        </option>
+      </select>
+    </div>
 
-      <div class="col width-40">
-        <button
-          v-if="options.page > 1"
-          @click="emitOptions('page', options.page - 1)"
-        >
-          Prev. page
-        </button>
-        <button
-          v-if="lastVisibleIndex < items.length"
-          @click="emitOptions('page', options.page + 1)"
-        >
-          Next page
-        </button>
-      </div>
+    <div class="col width-40">
+      <button
+        v-if="options.page > 1"
+        @click="emitOptions('page', options.page - 1)"
+      >
+        Prev. page
+      </button>
+      <button
+        v-if="lastVisibleIndex < items.length"
+        @click="emitOptions('page', options.page + 1)"
+      >
+        Next page
+      </button>
     </div>
   </div>
 </template>
@@ -126,10 +124,6 @@ function emitOptions<K extends keyof Options>(optionKey: K, value: Options[K]) {
 </script>
 
 <style scoped>
-.container {
-  width: 600px;
-  margin: auto;
-}
 .row {
   display: flex;
   flex-wrap: wrap;
