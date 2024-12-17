@@ -1,4 +1,5 @@
 import {VuetifySortArraysObject} from "./VDUSTypes";
+import { isVue2 } from 'vue-demi'
 
 export const elementToArrayOfInt = (element: any): Array<number> => {
   return ["number", "string"].includes(typeof element)
@@ -37,33 +38,49 @@ export const extractIntegerValue = (value: any, defaultValue = 0): number => {
 };
 
 export const getSortsArrayFromOrdering = (ordering: Array<string>|null): VuetifySortArraysObject => {
+  
   if (!ordering) {
     return { sortBy: [], sortDesc: [] };
   }
-  const sortBy: Array<string> = [];
+  const sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }> = [];
   const sortDesc: Array<boolean> = [];
 
-  ordering.forEach(orderItem => {
-    let isDesc = false;
-    if (orderItem.startsWith("-")) {
-      orderItem = orderItem.replace("-", "");
-      isDesc = true;
-    }
-    sortBy.push(orderItem);
-    sortDesc.push(isDesc);
-  });
+    ordering.forEach(orderItem => {
+      let isDesc = false;
+      if (orderItem.startsWith("-")) {
+        orderItem = orderItem.replace("-", "");
+        isDesc = true;
+      }
+      if(isVue2) {
+        sortBy.push(orderItem);
+        sortDesc.push(isDesc);
+      } else {
+        sortBy.push({key: orderItem, order: isDesc ? "desc" : "asc"});
+      }
+    });
 
   return { sortBy, sortDesc };
 }
 
-export const getOrderingFromSortArray = (sortBy: Array<string>, sortDesc: Array<boolean>): Array<string> => {
-  const ordering: Array<string> = [];
-  sortBy.forEach((orderItem, index) => {
-    let isDesc = true;
-    if (sortDesc.length > index) {
-      isDesc = sortDesc[index];
-    }
-    ordering.push(`${isDesc ? "-" : ""}${orderItem}`);
-  });
+export const getOrderingFromSortArray = (sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }>, sortDesc: Array<boolean>): Array<string> => {
+  let ordering: Array<string> = [];
+  if(isVue2) {
+    (sortBy as string[]).forEach((orderItem: string, index: number) => {
+      let isDesc = true;
+      if (sortDesc.length > index) {
+        isDesc = sortDesc[index];
+      }
+      ordering.push(`${isDesc ? "-" : ""}${orderItem}`);
+    });
+  } else {
+     // Vue 3 scenario: sortBy is Array<{ key: string; order: 'asc' | 'desc' }>
+     ordering = (sortBy as Array<{ key: string; order: 'asc' | 'desc' }>).reduce(
+      (acc: string[], item) => {
+        acc.push(`${item.order === 'desc' ? '-' : ''}${item.key}`);
+        return acc; // Return the accumulator array, not push result
+      },
+      []
+    );
+  }
   return ordering;
 }
