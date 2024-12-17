@@ -62,10 +62,10 @@ export const getSortsArrayFromOrdering = (ordering: Array<string>|null): Vuetify
   return { sortBy, sortDesc };
 }
 
-export const getOrderingFromSortArray = (sortBy: Array<string> | Array<{ key: string; order: 'asc' | 'desc'; }>, sortDesc: Array<boolean>): Array<string> => {
+export const getOrderingFromSortArray = (sortBy: Array<string | { key: string; order: 'asc' | 'desc'; }>, sortDesc: Array<boolean>): Array<string> => {
   let ordering: Array<string> = [];
   if(isVue2) {
-    sortBy.forEach((orderItem, index) => {
+    (sortBy as string[]).forEach((orderItem: string, index: number) => {
       let isDesc = true;
       if (sortDesc.length > index) {
         isDesc = sortDesc[index];
@@ -82,6 +82,5 @@ export const getOrderingFromSortArray = (sortBy: Array<string> | Array<{ key: st
       []
     );
   }
-  console.log(sortBy, ordering)
   return ordering;
 }

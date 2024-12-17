@@ -119,30 +119,30 @@ describe('helpers.ts', () => {
       const element = ["ordering_field"];
       const returnValue = getSortsArrayFromOrdering(element);
 
-      expect(returnValue).toEqual({ sortBy: ["ordering_field"], sortDesc: [false] })
+      expect(returnValue).toEqual({ sortBy: [{key: "ordering_field", order: "asc"}], sortDesc: [] })
     })
 
     it("return correct VuetifySortArraysObject if negative ordering", () => {
       const element = ["-ordering_field"];
       const returnValue = getSortsArrayFromOrdering(element);
 
-      expect(returnValue).toEqual({ sortBy: ["ordering_field"], sortDesc: [true] })
+      expect(returnValue).toEqual({ sortBy: [{key: "ordering_field", order: "desc"}], sortDesc: [] })
     })
   })
 
   describe('getOrderingFromSortArray', () => {
 
     it("return correct ordering if positive ordering", () => {
-      const sortBy = ["ordering_field"];
-      const sortDesc = [false];
+      const sortBy: { key: string; order: 'asc' | 'desc'; }[] = [{key: "ordering_field", order: "asc"}];
+      const sortDesc: boolean[] = [];
       const returnValue = getOrderingFromSortArray(sortBy, sortDesc);
 
       expect(returnValue).toEqual(["ordering_field"])
     })
 
     it("return correct ordering if negative ordering", () => {
-      const sortBy = ["ordering_field"];
-      const sortDesc = [true];
+      const sortBy: { key: string; order: 'asc' | 'desc'; }[] = [{key: "ordering_field", order: "desc"}];
+      const sortDesc: boolean[] = [];
       const returnValue = getOrderingFromSortArray(sortBy, sortDesc);
 
       expect(returnValue).toEqual(["-ordering_field"])
